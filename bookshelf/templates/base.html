@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+    <html>
+        <head> 
+            <!--Let browser know website is optimized for mobile-->
+            <meta name="viewport" content="width=device-width, initial-scale=1.0", charset="UTF-8"/>
+            {% block meta %}{% endblock %}
+            <!--Import Google Icon Font-->
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <!-- Compiled and minified CSS -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+            <!--Font Awesome-->
+            <script src="https://kit.fontawesome.com/1dadc7aeb9.js" crossorigin="anonymous"></script>
+            {% block head_scripts %}{% endblock %}
+            {% block style %}{% endblock %}
+            <title>{% block title %}{% endblock %}</title>
+        </head>
+        <body>
+            {% block content %}{% endblock %}
+            <!--JavaScript at end of body for optimized loading-->
+            <!-- Compiled and minified JavaScript -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            {% block body_scripts %}{% endblock %}
+            {% block mobile %}{% endblock %}
+        </body>
+    </html>

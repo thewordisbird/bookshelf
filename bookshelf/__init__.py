@@ -12,6 +12,9 @@ def create_app(config=DevelopmentConfig):
     # Initialize Extensions
 
     # Register Blueprints
+    from bookshelf.routes import bp as books_bp
+
+    app.register_blueprint(books_bp)
 
     # Test Route
     @app.route('/hello')
