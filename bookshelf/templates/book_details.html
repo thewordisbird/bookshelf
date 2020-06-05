@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block style %}
+<style>
+    .search-container {
+        display: inline;
+    }
+
+    .input-group{
+        display:table;
+        width:100%;
+    }
+
+    .input-group .input-field,
+    .input-group .input-group-addon{
+        display:table-cell;
+    }
+
+</style>
+{% endblock %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col m10 offset-m1">
+            <div class="col m2">
+                <img class="cover-img" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
+            </div>
+            <div class="col m8">
+                <h4>{{ book['volumeInfo']['title'] }}</h4>
+                <span class="author">{{ ', '.join(book['volumeInfo']['authors']) }}</span><br>
+                <span class="description">{{ description }}</span>                                
+            </div> 
+        </div> 
+    </div>
+
+    <!-- Reviews will go below-->
+
+</div>
+{% endblock %}
+
