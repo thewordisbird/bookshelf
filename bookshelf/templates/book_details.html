@@ -54,7 +54,7 @@
                     <li><i class="material-icons star-icon" >star_border</i></li>
                     <li><i class="material-icons star-icon" >star_border</i></li>
                 </ul>
-                <a class="waves-effect waves-light btn">Leave Review</a>
+                <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="waves-effect waves-light btn">Leave Review</a>
             </div>
             <div class="col m10">
                 <h4>{{ book['volumeInfo']['title'] }}</h4>
