@@ -1,19 +1,40 @@
 {% extends 'base.html' %}
 {% block style %}
 <style>
-    .search-container {
+   
+    .description-container {
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #D8D8D8;
+    }
+
+    .review-container {
+        
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #D8D8D8;
+    }
+
+    .cover-img {
+        margin-top: 2rem;
+    }
+
+    .user-img {
+        border-radius: 50%;
+        margin-top: 1rem;
+    }
+
+    .star-rating {
+        
+    }
+    .star-rating li {
         display: inline;
     }
 
-    .input-group{
-        display:table;
-        width:100%;
+    .tiny-small {
+        font-size: 1.5rem;
     }
-
-    .input-group .input-field,
-    .input-group .input-group-addon{
-        display:table-cell;
-    }
+    
+    
+   
 
 </style>
 {% endblock %}
@@ -22,20 +43,59 @@
 
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col m10 offset-m1">
+    <div class="row ">
+        <div class="col m10 offset-m1 description-container">
             <div class="col m2">
                 <img class="cover-img" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
+                <ul class="star-rating">
+                    <li><i class="material-icons star-icon" >star_border</i></li>
+                    <li><i class="material-icons star-icon" >star_border</i></li>
+                    <li><i class="material-icons star-icon" >star_border</i></li>
+                    <li><i class="material-icons star-icon" >star_border</i></li>
+                    <li><i class="material-icons star-icon" >star_border</i></li>
+                </ul>
+                <a class="waves-effect waves-light btn">Leave Review</a>
             </div>
-            <div class="col m8">
+            <div class="col m10">
                 <h4>{{ book['volumeInfo']['title'] }}</h4>
                 <span class="author">{{ ', '.join(book['volumeInfo']['authors']) }}</span><br>
-                <span class="description">{{ description }}</span>                                
+                <span class="description">{{ book['volumeInfo']['description']|safe }}</span>                                
             </div> 
+           
         </div> 
     </div>
 
     <!-- Reviews will go below-->
+    <div class="row ">
+        <div class="col m10 offset-m1 review-container">
+            <div class="col m2">
+                <img class="user-img" src="https://via.placeholder.com/150">
+            </div>
+            <div class="col m10 ">
+                <div class="row">
+                    <div class="col m12">
+                        <a href="#">User Name</a> rated it <span class="star-rated">
+                            <i class="material-icons star-icon tiny-small" >star</i>
+                            <i class="material-icons star-icon tiny-small" >star</i>
+                            <i class="material-icons star-icon tiny-small" >star</i>
+                            <i class="material-icons star-icon tiny-small" >star_half</i>
+                            <i class="material-icons star-icon tiny-small" >star_border</i>
+                        </span>
+                        on Nov 13, 2019
+                    </div>
+                    <div class="col m12 review-title">
+                        <h6>The Pages Turned Themselves</h6>
+                    </div>
+                    <div class="col m12 review-content">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus congue cursus dui ac mollis. 
+                        Mauris ornare dui vitae porta accumsan. Aliquam rutrum justo id nunc aliquam, porttitor tempus odio varius. Nunc arcu sapien, 
+                        rhoncus in ultrices facilisis, commodo a augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 {% endblock %}

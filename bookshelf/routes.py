@@ -14,7 +14,9 @@ def search():
 @bp.route('/book/<book_id>', methods=['GET'])
 def book_details(book_id):
     book = get_book(book_id)
-    description = unescape(book['volumeInfo']['description'])
     #print(unescape(book['volumeInfo']['description']))
-    return render_template('book_details.html', book=book, description=description)
+    return render_template('book_details.html', book=book)
 
+@bp.route('/test')
+def test():
+    return ("<p>This is a test</p>")
