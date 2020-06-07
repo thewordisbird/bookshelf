@@ -22,9 +22,6 @@
         margin-top: 1rem;
     }
 
-    .star-rating {
-        
-    }
     .star-rating li {
         display: inline;
     }
@@ -32,7 +29,15 @@
     .tiny-small {
         font-size: 1.5rem;
     }
+
+    .star-icon {
+        position: relative;
+        top: 5px;
+    }
     
+    .set-review {
+        cursor: pointer;
+    }
     
    
 
@@ -48,11 +53,11 @@
             <div class="col m2">
                 <img class="cover-img" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
                 <ul class="star-rating">
-                    <li><i class="material-icons star-icon" >star_border</i></li>
-                    <li><i class="material-icons star-icon" >star_border</i></li>
-                    <li><i class="material-icons star-icon" >star_border</i></li>
-                    <li><i class="material-icons star-icon" >star_border</i></li>
-                    <li><i class="material-icons star-icon" >star_border</i></li>
+                    <i id="starOne" value="1" class="material-icons star-icon tiny-small set-review" >star_border</i>
+                    <i id="starTwo" value="2" class="material-icons star-icon tiny-small set-review" >star_border</i>
+                    <i id="starThree" value="3" class="material-icons star-icon tiny-small set-review" >star_border</i>
+                    <i id="starFour" value="4" class="material-icons star-icon tiny-small set-review" >star_border</i>
+                    <i id="starFive" value="5" class="material-icons star-icon tiny-small set-review" >star_border</i>
                 </ul>
                 <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="waves-effect waves-light btn">Leave Review</a>
             </div>
@@ -100,3 +105,48 @@
 </div>
 {% endblock %}
 
+{% block body_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.datepicker');
+      var instances = M.Datepicker.init(elems, {
+          format: 'mm/dd/yyyy'});
+    });
+  </script>
+
+<script>
+    const ratingField = document.getElementById("rating");
+    const starElements = document.getElementsByClassName("set-review");
+    const stars = new Array;
+
+    const setStars = (rating) => {
+      for (let i=0; i<rating; i++) {
+          stars[i].innerHTML= "star";
+      };
+      for (let j=rating; j<5; j++ ){
+          stars[j].innerHTML="star_border";
+      };
+    };
+
+    const removeStars = (rating) => {
+      for (let i=rating-1; i<5; i++) {
+          stars[i].innerHTML= "star_border";
+      };
+    };
+
+    for (let i=0; i<starElements.length; i++) {
+        starElements[i].addEventListener('click', function(){
+          let starValue = this.getAttribute("value");
+          if (this.innerHTML == "star_border") {
+              setStars(starValue);
+              ratingField.value = starValue ;
+          } else {
+              removeStars(starValue);
+              ratingField.value = starValue - 1;
+          };
+          // TODO: Redirect user to review form and pass review value to star rating
+        }, false);
+        stars.push(starElements[i])
+    }
+</script>
+{% endblock %}
