@@ -33,6 +33,7 @@
     .star-icon {
         position: relative;
         top: 5px;
+        color: black;
     }
     
     .set-review {
@@ -53,11 +54,11 @@
             <div class="col m2">
                 <img class="cover-img" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
                 <ul class="star-rating">
-                    <i id="starOne" value="1" class="material-icons star-icon tiny-small set-review" >star_border</i>
-                    <i id="starTwo" value="2" class="material-icons star-icon tiny-small set-review" >star_border</i>
-                    <i id="starThree" value="3" class="material-icons star-icon tiny-small set-review" >star_border</i>
-                    <i id="starFour" value="4" class="material-icons star-icon tiny-small set-review" >star_border</i>
-                    <i id="starFive" value="5" class="material-icons star-icon tiny-small set-review" >star_border</i>
+                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=1) }}"><i value="1" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=2) }}"><i value="2" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=3) }}"><i value="3" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=4) }}"><i value="4" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=5) }}"><i value="5" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
                 </ul>
                 <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="waves-effect waves-light btn">Leave Review</a>
             </div>
@@ -143,8 +144,7 @@
           } else {
               removeStars(starValue);
               ratingField.value = starValue - 1;
-          };
-          // TODO: Redirect user to review form and pass review value to star rating
+          };    
         }, false);
         stars.push(starElements[i])
     }

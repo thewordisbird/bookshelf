@@ -1,5 +1,5 @@
 
-from flask import Flask, Blueprint, render_template, request, jsonify, json
+from flask import Flask, Blueprint, render_template, redirect, request, jsonify, json, url_for
 
 from .forms import SearchForm, ReviewForm
 from .google_books import get_book
@@ -21,10 +21,17 @@ def book_details(book_id):
 def new_review(book_id):
     form = ReviewForm()
     book = get_book(book_id)
+    rating = request.args.get('rating')
+    if rating:
+        rating = int(rating)
+    else:
+        rating = 0
+    print(rating)
+    print(form.data)
     if form.validate_on_submit():
-        pass
-
-    return render_template('review_form.html', form=form, book=book)
+        print(form.data)
+        return redirect(url_for('books.book_details', book_id=book_id))
+    return render_template('review_form.html', form=form, book=book, rating=rating)
 
 
 @bp.route('/test')

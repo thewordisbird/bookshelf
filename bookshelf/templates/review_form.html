@@ -24,6 +24,10 @@
     cursor: pointer;
 }
 
+.review-book-info{
+    padding-bottom: 10px !important;
+        border-bottom: 1px solid #D8D8D8;
+}
 </style>
 {% endblock %}
 
@@ -32,18 +36,37 @@
 {% block content %}
 <div class="container">
     <div class="row">
+        <div class="col m10 offset-m1 review-book-info">
+            <div class="col m1">
+                <img class="cover-img-review" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}" width="50" height="75">
+            </div>
+            <div class="col m11">
+                <h6>{{ book['volumeInfo']['title'] }}</h6>
+                <span class="author">{{ ', '.join(book['volumeInfo']['authors']) }}</span><br>                    
+            </div> 
+        </div> 
+    </div>
+    <div class="row">
         <div class="col m10 offset-m1">
 <form method=post enctype="multipart/form-data">
     {{ form.hidden_tag() }}
      <span class="rating-label"> My Rating:</span> <span class="star-rated">
-        <i id="starOne" value="1" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
-        <i id="starTwo" value="2" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
-        <i id="starThree" value="3" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
-        <i id="starFour" value="4" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
-        <i id="starFive" value="5" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+         {% if rating %}
+            {% for i in range(rating) %}
+                <i value="{{ i+1 }}"" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star</i>
+            {% endfor %}
+            {% for j in range(rating, 5) %}
+                <i value="{{ j+1 }}"" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+            {% endfor %}
+        {% else %}
+            <i value="1" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+            <i  value="2" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+            <i  value="3" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+            <i  value="4" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+            <i  value="5" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+         {% endif %}
     </span>
     {{ form.rating() }}
-
     <div class="row">
         <div class="col s12">
             <div class="input-field">
