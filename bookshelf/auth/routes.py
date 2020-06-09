@@ -6,12 +6,22 @@ from flask import Flask, flash, request, redirect, url_for, send_from_directory,
 from .forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
-from .firebase_auth import login_required, restricted, create_session_cookie, create_new_user, send_password_reset_email, set_custom_user_claims, decode_claims
+from bookshelf.firebase_auth import login_required, restricted, create_session_cookie, create_new_user, send_password_reset_email, set_custom_user_claims, decode_claims
+from bookshelf.firebase_firestore import add_user
 
 # Try moving this into factory
 csrf = CSRFProtect(current_app)
 
 bp = Blueprint('auth', __name__, static_folder='static')
+
+class User:
+    def __init__(self, display_name, email):
+        self.display_name = display_name
+        self.email = email
+        self.id = None
+
+    def to_dict(self):
+        return self.__dict__
 
 
 @bp.route('/', methods=['GET'])
@@ -21,14 +31,12 @@ def index():
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
+    # Requires connection to firestore
     form = RegisterForm()
 
-    if form.validate_on_submit():  
-        email = form.data['email']
-        password = form.data['password']
-        display_name = form.data['name']
-        user = create_new_user(email, password, display_name)
-        # TODO: connect to firestore db to store additional user info by uid
+    if form.validate_on_submit():
+        auth_user = create_new_user(form.data['email'], form.data['password'], form.data['name'])
+        add_user({'display_name': form.data['name'] , 'email':form.data['email'] }, auth_user.uid)
         return redirect(url_for('auth.login'))        
     return render_template('register.html', form=form)
 
@@ -47,6 +55,8 @@ def login():
             # see create_session_cookie function for info on possible errors
             return abort(401, 'Failed to create a session cookie')
         else:
+            # TODO: Confirm user is in firestore & add them if not
+
             # Create Flask User session to store uid for user information lookup
             session['_user_id'] = request.form.get('uid')
             # Create response to client

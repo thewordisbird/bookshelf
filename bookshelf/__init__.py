@@ -1,7 +1,6 @@
 from flask import Flask
 from config import DevelopmentConfig
-from .auth.firebase_auth import initialize_firebase
-
+import firebase_admin
 def create_app(config=DevelopmentConfig):
     """Create an application instance with the desired configuration.
 
@@ -11,7 +10,7 @@ def create_app(config=DevelopmentConfig):
     app.config.from_object(config)
 
     # Initialize Extensions
-    initialize_firebase()
+    firebase_admin.initialize_app()
 
     # Register Blueprints
     from bookshelf.main.routes import bp as books_bp

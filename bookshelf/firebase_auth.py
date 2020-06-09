@@ -10,10 +10,12 @@ from firebase_admin import credentials, auth
 from flask import request, redirect, url_for, session, abort
 
 
-def initialize_firebase():
+    # Initialize Firebase in the application factory:
+    #   import firebase-admin
+    #   firebase_admin.initialize_app()
     # Requires the firebase-admin package installed and set enviornmental variable
     # GOOGLE_APPLICATION_CREDENTIALS pointing to the JSON file with service account key
-    firebase_admin.initialize_app()
+    
 
 # Decorators for login required and restricted access
 def login_required(f):
