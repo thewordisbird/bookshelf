@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block head_scripts %}
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
+<script src="{{ url_for('static', filename='scripts/init.js') }}"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
+{% endblock %}
+{% block style %}
+<style>
+    body {
+        background-color: lightgray;
+        height: 100vh;
+    }
+
+    .flexbox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%
+    }
+    .card-title {
+        padding-left: 10px;
+    }
+
+    .card {
+            width: 400px;
+        }
+
+    .btn-block {
+        width: 100%;
+    }
+    
+    .error-message {
+        padding: 10px;
+    }
+</style>
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="flexbox">
+    <div class="card">
+        <div class="card-title teal lighten-2 white-text section">
+            Log In
+        </div>
+        <div class="card-content">
+            <!-- Login With Socails-->
+            <div class="row">
+                <div class="col s12">
+                    <div id="providerMessage" class="red lighten-4 z-depth-1"></div>
+                </div> 
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button id="btnGoogle" class="btn btn-block waves-effect waves-light transparent" type="submit" name="action">
+                        <span class="teal-text text-lighten-2">
+                            Log in with Google
+                            <i class="fab fa-google left"></i>
+                        </span>
+                        
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button id="btnFacebook" class="btn btn-block waves-effect waves-light transparent" type="submit" name="action">
+                        <span class="teal-text text-lighten-2">
+                            Log in with Facebook
+                            <i class="fab fa-facebook-f left"></i>
+                        </span>
+                        
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <div id="loginMessage" class="red lighten-4 z-depth-1"></div>
+                </div> 
+            </div>
+            
+            {{ form.hidden_tag() }}
+            
+            <div class="row">
+                <div class="input-field col s12">
+                    {{ form.email(id="txtEmail") }}
+                    {{ form.email.label }}
+                </div>
+                <div class="input-field col s12">
+                    {{ form.password(id="txtPassword") }}
+                    {{ form.password.label }}
+                    <span class="helper-text right-align"><a href="{{ url_for('auth.reset_password') }}">Forgot password?</a></span>
+                </div>
+                <!-- Implement in Future Versions. Need to look into how to securly accomplish this-->
+                <!--
+                <div class="col s12">
+                    <label>
+                        {{ form.remember_me()}}
+                        <span>{{ form.remember_me.label }}</span>
+                    </label>
+                    </div>
+                </div>
+                -->
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button id="btnLogin" class="btn btn-block waves-effect waves-light teal lighten-2" type="submit" name="action">Log In
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            
+            </div>
+            <div class="row">
+                <div class="col s12 center-align">
+                    Not Registerd? <a href="{{ url_for('auth.register') }}">Register Now</a>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block body_scripts %}
+ <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+ <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-auth.js"></script>
+ <script src="{{ url_for('static', filename='scripts/login.js') }}"></script>
+{% endblock %}

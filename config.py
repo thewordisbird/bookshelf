@@ -8,8 +8,9 @@ class ProcudtionConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG=True
+    GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 
 class TestingConfig(Config):
     TESTING=True
-
+    GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
     

@@ -6,6 +6,10 @@ from .google_books import get_book
 from html import unescape
 bp = Blueprint('books', __name__)
 
+@bp.route('/index')
+def index():
+    return ('<p>You are at the index</p>')
+
 @bp.route('/search', methods=['GET'])
 def search():
     form = SearchForm()
