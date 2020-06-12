@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <button id="btnLogOut" class="btn waves-effect waves-light" type="submit" name="action">Log Out
+    <i class="material-icons right">send</i>
+</button>
+{% endblock %}
+
+
+{% block body_scripts %}
+    <script src="{{ url_for('static', filename='scripts/logout.js') }}"></script>
+{% endblock %}

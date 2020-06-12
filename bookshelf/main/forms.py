@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, DateTimeField, HiddenField, DateField
 from wtforms.validators import DataRequired, ValidationError, optional  
 
-class NullableDateField(DateField):
+class NullableDateTimeField(DateTimeField):
     """Modify DateField to allow for Null values"""
     def process_formdata(self, valuelist):
         if valuelist:
@@ -12,7 +12,7 @@ class NullableDateField(DateField):
                 self.data = None
                 return
             try:
-                self.data = datetime.datetime.strptime(date_str, self.format).date()
+                self.data = datetime.datetime.strptime(date_str, self.format)
             except ValueError:
                 self.data = None
                 raise ValueError(self.gettext('Not a valid date value'))
@@ -24,8 +24,8 @@ class ReviewForm(FlaskForm):
     rating = HiddenField('Rating', validators=[DataRequired()])
     review_title = StringField('Headline')
     review_content = TextAreaField('Review')
-    date_started = NullableDateField('Date Started', format='%m/%d/%Y')
-    date_finished = NullableDateField('Date Finished', format='%m/%d/%Y')
+    date_started = NullableDateTimeField('Date Started', format='%m/%d/%Y')
+    date_finished = NullableDateTimeField('Date Finished', format='%m/%d/%Y')
 
     def validate_date_finished(self, date_finished):
         if self.date_started.data and date_finished.data:

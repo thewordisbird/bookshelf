@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+   
+
+    .user-name {
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #D8D8D8;
+    }
+
+    .user-img {
+        border-radius: 50%;
+    }
+
+    .profile-section-header {
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #D8D8D8;
+    }
+
+    .divider {
+        margin-bottom: 10px !important;
+        border-bottom: 1px solid #D8D8D8;
+    }
+
+    .cover-img {
+        margin-top: .5rem;
+    }
+
+    .star-icon {
+    position: relative;
+    top: 5px;
+    color: black;
+
+}
+
+.create-icon {
+    position: relative;
+    top: 5px;
+
+}
+.tiny-small {
+        font-size: 1.5rem;
+    }
+
+.profile-name {
+    font-size: 1.5rem;
+}
+
+.edit-profile {
+    font-size: .75rem;
+    color: gray;
+}
+
+</style>
+{% endblock %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Reviews will go below-->
+    <div class="row">
+        <div class="col m10 offset-m1 review-container">
+            <div class="col m2">
+                <img class="user-img" src="https://via.placeholder.com/150">
+            </div>
+            <div class="col m10 ">
+                <div class="row">
+                    <div class="col m12">
+                        <div class="user-name">
+                            <span class="profile-name">{{ user['display_name']}} </span><a class="edit-profile" href="#">(edit profile)</a>
+                        </div>
+                    </div>
+                    <div class="col m12">
+                        Joined {{ user['created'].strftime('%B %Y')}} <!--last Active this month--> <!--Add later. Requires databse update on login for last logged in-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col m10 offset-m1">
+            <div class="profile-section-header">
+                USER NAME IS CURRENTLY READING:
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col m10 offset-m1 review-book-info">
+            <div class="col m2">
+                <img class="cover-img" src="http://books.google.com/books/content?id=-mv_ryTuvo0C&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE72rABnPh-bq7_UIanKnxhR0z19_j-UWmIwveLpzcPPzoYNvhfyVRjsko_gVgIci-_k8b4geyzHoJeLp6zgJxODxXUk2yGG6ukj6ZSahKDisz73E49mDj-UolY_Rpvlm5gjPZhpa&source=gbs_api" >
+            </div>
+            <div class="col m10">
+                <div class="row">
+                    <div class="col m6">
+                        <h5>The World is flat</h5>by Author Name
+                    </div>
+                    <div class="col m6 right-align">
+                        <ul class="star-rating">
+                            <a href="#"><i value="1" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                            <a href="#"><i value="2" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                            <a href="#"><i value="3" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                            <a href="#"><i value="4" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                            <a href="#"><i value="5" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                        </ul>
+                        <a href="#" class="waves-effect waves-light btn">Leave Review</a>
+                    </div>
+
+                </div>              
+            </div> 
+            
+        </div> 
+    </div>
+
+    <div class="row">
+        <div class="col m10 offset-m1">
+            <div class="profile-section-header">
+                USER NAME HAS READ:
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col m10 offset-m1 review-book-info">
+            <div class="col m12">
+                The World Is Flat by Author Name
+            </div>
+            <div class="col m2">
+                <img class="cover-img" src="http://books.google.com/books/content?id=-mv_ryTuvo0C&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE72rABnPh-bq7_UIanKnxhR0z19_j-UWmIwveLpzcPPzoYNvhfyVRjsko_gVgIci-_k8b4geyzHoJeLp6zgJxODxXUk2yGG6ukj6ZSahKDisz73E49mDj-UolY_Rpvlm5gjPZhpa&source=gbs_api" >
+            </div>
+            <div class="col m10">
+                <div class="row">
+                    <div class="col m12">
+                        Rated it <span class="star-rated">
+                            <i class="material-icons star-icon tiny-small" >star</i>
+                            <i class="material-icons star-icon tiny-small" >star</i>
+                            <i class="material-icons star-icon tiny-small" >star</i>
+                            <i class="material-icons star-icon tiny-small" >star_half</i>
+                            <i class="material-icons star-icon tiny-small" >star_border</i>
+                        </span>
+                        on Nov 13, 2019 <i class="material-icons create-icon tiny-small">create</i>
+                    </div>
+                    <div class="col m12 review-title">
+                        <h6>The Pages Turned Themselves</h6>
+                    </div>
+                    <div class="col m12 review-content">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus congue cursus dui ac mollis. 
+                        Mauris ornare dui vitae porta accumsan. Aliquam rutrum justo id nunc aliquam, porttitor tempus odio varius. Nunc arcu sapien, 
+                        rhoncus in ultrices facilisis, commodo a augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur.
+                    </div>
+
+                </div>              
+            </div> 
+        <div class="col m12 divider"></div>  
+        <div class="col m12">
+            The World Is Flat by Author Name
+        </div>
+        <div class="col m2">
+            <img class="cover-img" src="http://books.google.com/books/content?id=-mv_ryTuvo0C&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE72rABnPh-bq7_UIanKnxhR0z19_j-UWmIwveLpzcPPzoYNvhfyVRjsko_gVgIci-_k8b4geyzHoJeLp6zgJxODxXUk2yGG6ukj6ZSahKDisz73E49mDj-UolY_Rpvlm5gjPZhpa&source=gbs_api" >
+        </div>
+        <div class="col m10">
+            <div class="row">
+                <div class="col m12">
+                    Rated it <span class="star-rated">
+                        <i class="material-icons star-icon tiny-small" >star</i>
+                        <i class="material-icons star-icon tiny-small" >star</i>
+                        <i class="material-icons star-icon tiny-small" >star</i>
+                        <i class="material-icons star-icon tiny-small" >star_half</i>
+                        <i class="material-icons star-icon tiny-small" >star_border</i>
+                    </span>
+                    on Nov 13, 2019 <i class="material-icons create-icon tiny-small">create</i>
+                </div>
+                <div class="col m12 review-title">
+                    <h6>The Pages Turned Themselves</h6>
+                </div>
+                <div class="col m12 review-content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus congue cursus dui ac mollis. 
+                    Mauris ornare dui vitae porta accumsan. Aliquam rutrum justo id nunc aliquam, porttitor tempus odio varius. Nunc arcu sapien, 
+                    rhoncus in ultrices facilisis, commodo a augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur.
+                </div>
+
+            </div>              
+        </div> 
+
+
+    </div> 
+
+</div>
+{% endblock %}
+
+
+{% block body_scripts %}
+<script>
+    const ratingField = document.getElementById("rating");
+    const starElements = document.getElementsByClassName("set-review");
+    const stars = new Array;
+
+    const setStars = (rating) => {
+      for (let i=0; i<rating; i++) {
+          stars[i].innerHTML= "star";
+      };
+      for (let j=rating; j<5; j++ ){
+          stars[j].innerHTML="star_border";
+      };
+    };
+
+    const removeStars = (rating) => {
+      for (let i=rating-1; i<5; i++) {
+          stars[i].innerHTML= "star_border";
+      };
+    };
+
+    for (let i=0; i<starElements.length; i++) {
+        starElements[i].addEventListener('click', function(){
+          let starValue = this.getAttribute("value");
+          if (this.innerHTML == "star_border") {
+              setStars(starValue);
+              ratingField.value = starValue ;
+          } else {
+              removeStars(starValue);
+              ratingField.value = starValue - 1;
+          };    
+        }, false);
+        stars.push(starElements[i])
+    }
+</script>
+{% endblock %}

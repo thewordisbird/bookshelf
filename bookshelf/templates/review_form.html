@@ -53,10 +53,10 @@
      <span class="rating-label"> My Rating:</span> <span class="star-rated">
          {% if rating %}
             {% for i in range(rating) %}
-                <i value="{{ i+1 }}"" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star</i>
+                <i value="{{ i+1 }}" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star</i>
             {% endfor %}
             {% for j in range(rating, 5) %}
-                <i value="{{ j+1 }}"" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+                <i value="{{ j+1 }}" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
             {% endfor %}
         {% else %}
             <i value="1" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>

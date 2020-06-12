@@ -83,6 +83,16 @@ def create_new_user(email, password, display_name):
         #   - FirebseError - If an error occurs while creating a session cookie
         return e
 
+def add_auth_user(user):
+    try:
+        auth_user = auth.create_user(**user)
+        return auth_user
+    except Exception as e:
+         # Possible Exceptions:
+        #   - ValueError - If input parameters are invlaid
+        #   - FirebseError - If an error occurs while creating a session cookie
+        return e
+
 def decode_claims(uid):
     return auth.get_user(uid).custom_claims
 

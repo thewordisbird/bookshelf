@@ -1,28 +1,27 @@
 import os
 import datetime
 
-from flask import Flask, flash, request, redirect, url_for, send_from_directory, render_template, jsonify, abort, make_response, current_app, Blueprint, session
+from flask import Flask, flash, request, redirect, url_for, \
+    send_from_directory, render_template, jsonify, abort, \
+        make_response, current_app, Blueprint, session
 
 from .forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
-from bookshelf.firebase_auth import login_required, restricted, create_session_cookie, create_new_user, send_password_reset_email, set_custom_user_claims, decode_claims
-from bookshelf.firebase_firestore import add_user
+from bookshelf.firebase_auth import login_required, restricted, \
+    create_session_cookie, create_new_user, send_password_reset_email, \
+        set_custom_user_claims, decode_claims, add_auth_user
+from bookshelf.firebase_firestore import User, Review, add_user, get_user
 
-# Try moving this into factory
+# Add CSRF protection to post requests
 csrf = CSRFProtect(current_app)
 
 bp = Blueprint('auth', __name__, static_folder='static')
 
-class User:
-    def __init__(self, display_name, email):
-        self.display_name = display_name
-        self.email = email
-        self.id = None
-
-    def to_dict(self):
-        return self.__dict__
-
+def sans_csrf(data):
+    """Remove CSRF From form data, convert rating to number"""
+    del data['csrf_token']
+    return data
 
 @bp.route('/', methods=['GET'])
 def index():
@@ -35,7 +34,10 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        auth_user = create_new_user(form.data['email'], form.data['password'], form.data['name'])
+        user = User(sans_csrf(form.data))
+        #auth_user = create_new_user(form.data['email'], form.data['password'], form.data['name'])
+        auth_user = add_auth_user(user.to_dict())
+        print(auth_user)
         add_user({'display_name': form.data['name'] , 'email':form.data['email'] }, auth_user.uid)
         return redirect(url_for('auth.login'))        
     return render_template('register.html', form=form)
@@ -68,14 +70,7 @@ def login():
     return render_template('login.html', form=form, title="Login")
 
 
-@bp.route('/profile', methods=['GET'])
-@login_required
-def access_restricted_content():
-    session_cookie = request.cookies.get('firebase')
-    #decoded_claims = auth.verify_session_cookie(session_cookie, check_revoked=True)
-    #uid = decoded_claims.get('user_id')
-    #email = decoded_claims.get('email')
-    return render_template('profile.html')
+
 
 
 @bp.route('/resetPassword', methods=['GET', 'POST'])
@@ -86,6 +81,9 @@ def reset_password():
         return redirect(url_for('auth.login'))
     return render_template('reset_password.html', form=form, title='Reset Password')
 
+@bp.route('/logout')
+def logout():
+    return render_template('logout.html')
 
 @bp.route('/sessionLogout', methods=['POST'])
 @csrf.exempt
@@ -114,7 +112,6 @@ def set_admin():
     return redirect(url_for('auth.access_restricted_content'))
 
 @bp.route('/checkAdmin')
-#comment
 def check_admin():
     print(decode_claims(session['_user_id']))
     return redirect(url_for('auth.access_restricted_content'))
