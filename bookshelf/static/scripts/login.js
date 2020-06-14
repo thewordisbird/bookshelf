@@ -2,6 +2,7 @@
    
     const txtEmail = document.getElementById('txtEmail');
     const txtPassWord = document.getElementById('txtPassword');
+    const txtNext = document.getElementById('txtNext')
     const btnLogin = document.getElementById('btnLogin');
     const csrfToken = document.getElementById('csrf_token');
     const btnLogOut = document.getElementById('btnLogOut')
@@ -57,7 +58,7 @@
             // A page redirect would suffice as the persistence is set to NONE.
             return auth.signOut();
         }).then(() => {
-            window.location.assign('/index');
+            window.location.assign(txtNext.value);
         }).catch( error => {
             divLoginMessage.innerHTML = '<span class="error-message">' + error.message + '</span>'            
         });
@@ -82,7 +83,7 @@
             // A page redirect would suffice as the persistence is set to NONE.
             return auth.signOut();
         }).then(() => {
-            window.location.assign('/index');
+            window.location.assign(txtNext.value);
         }).catch( error => {
             divProviderMessage.innerHTML = '<span class="error-message">' + error.message + '</span>'            
         });
@@ -107,7 +108,7 @@
             // A page redirect would suffice as the persistence is set to NONE.
             return auth.signOut();
         }).then(() => {
-            window.location.assign('/index');
+            window.location.assign(txtNext.value);
         }).catch( error => {
             divProviderMessage.innerHTML = '<span class="error-message">' + error.message + '</span>'            
         });

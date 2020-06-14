@@ -8,9 +8,6 @@ from bookshelf.firebase_firestore import set_reading, get_reading_doc, set_read,
 
 bp = Blueprint('books', __name__)
 
-
-        
-
 def clean_form_data(data):
     """Remove CSRF From form data, convert rating to number"""
     del data['csrf_token']
@@ -18,7 +15,7 @@ def clean_form_data(data):
         data['rating'] = int(data['rating'])
     return data
 
-@bp.route('/index')
+@bp.route('/')
 def index():
     return ('<p>You are at the index</p>')
 
