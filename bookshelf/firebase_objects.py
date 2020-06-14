@@ -43,7 +43,7 @@ class User:
             if key in self.valid_db_attrs or \
                 key in self.valid_auth_attrs:
                 setattr(self, key, data[key])
-        self.timestamp = datetime.now()
+        #self.timestamp = datetime.now()
 
     def to_dict_for_auth(self):
         auth_dict = {key:self.__dict__[key] for key in self.valid_auth_attrs if key in self.__dict__}
@@ -58,8 +58,13 @@ class User:
         return self.__dict__
 
     @classmethod
-    def build_from_db(cls):
-        pass
+    def build_from_db(cls, uid):
+        db = firestore.client()
+        user_ref = db.collection('users').document(uid)
+        user = user_ref.get().to_dict()
+        user['uid'] = uid
+        
+        return User(user)
 
     @classmethod
     def build_from_auth(cls, uid):
@@ -88,7 +93,18 @@ class User:
 
     def add_to_db(self):
         db = firestore.client()
-        self.created = datetime.now()
-        self.last_updated = self.created
+        self.created = datetime.fromtimestamp(int(self.created)/1000.0)
+        setattr(self, 'last_updated', self.created)
         user_ref = db.collection('users').document(self.uid)
         user_ref.set(self.to_dict_for_db())
+
+    def update_auth_data(self, auth_user):
+        auth_user = auth_user.__dict__['_data']
+        print(f'auth_user: {auth_user}')
+        for key in auth_user.keys():
+            if key in self.auth_field_map:
+                setattr(self, self.auth_field_map[key], auth_user[key])
+        # Update created from ms string to datetime
+        self.created = datetime.fromtimestamp(int(self.created)/1000.0)
+       
+       

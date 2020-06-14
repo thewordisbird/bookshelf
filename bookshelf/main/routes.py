@@ -25,7 +25,7 @@ def index():
 def profile(user_id):
     session_cookie = request.cookies.get('firebase')
     user = session['_user']
-    
+    print(user)
     #reading = get_books(user['id'], 'currently_reading')``
     #read = get_books(user['id'], 'read')
     return render_template('profile.html', user=user)

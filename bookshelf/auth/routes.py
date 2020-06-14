@@ -31,12 +31,15 @@ def register():
     """Form to register collect user information to register user with app"""
     form = RegisterForm()
 
-    print(form.data, form.validate(), form.errors)
+    #print(form.data, form.validate(), form.errors)
     if form.validate_on_submit():
         user = User(form.data)
-        print(f'route user obj: {user.__dict__}')
+        #print(f'route user obj: {user.__dict__}')
         try:
-            user.add_to_auth()
+            auth_user = user.add_to_auth()
+            user.update_auth_data(auth_user)
+            user.add_to_db()
+            #print(f'user: {user}\nauth_user: {auth_user}')
             return redirect(url_for('auth.login'))      
         except Exception as e:
             #TODO: Handle errors gracefully
@@ -73,8 +76,11 @@ def login():
             # will need to be added to firestore on first login
             if not auth_user.exists_in_db():
                 auth_user.add_to_db()
+
+            user = User.build_from_db(auth_user.uid)
+            print(f'login user: {user.to_dict()}')
             # Create Flask User session to store uid for user information lookup
-            session['_user'] = auth_user.to_dict()
+            session['_user'] = user.to_dict()
             print(session['_user'])
             # Create response to client
             #next = request.args.get('next') or url_for('auth.index')
