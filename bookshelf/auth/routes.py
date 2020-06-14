@@ -75,6 +75,7 @@ def login():
                 auth_user.add_to_db()
             # Create Flask User session to store uid for user information lookup
             session['_user'] = auth_user.to_dict()
+            print(session['_user'])
             # Create response to client
             #next = request.args.get('next') or url_for('auth.index')
             #print(f'Next: {next}')

@@ -19,23 +19,24 @@ def clean_form_data(data):
 def index():
     return ('<p>You are at the index</p>')
 
+# /user routes
 @bp.route('/profile/<user_id>', methods=['GET'])
 @login_required
 def profile(user_id):
     session_cookie = request.cookies.get('firebase')
-    user = get_user(session['_user_id'])
+    user = session['_user']
     
-    #reading = get_books(user['id'], 'currently_reading')
+    #reading = get_books(user['id'], 'currently_reading')``
     #read = get_books(user['id'], 'read')
     return render_template('profile.html', user=user)
 
-@bp.route('/search', methods=['GET'])
-@login_required
+# /books routes
+@bp.route('/books/search', methods=['GET'])
 def search():
     form = SearchForm()
     return render_template('search.html', title='Find A Book', form=form)
 
-@bp.route('/book/<book_id>', methods=['GET'])
+@bp.route('/books/<book_id>', methods=['GET'])
 def book_details(book_id):
     book = get_book(book_id)
     reading = get_reading_doc(session['_user_id'], book_id)
@@ -44,7 +45,7 @@ def book_details(book_id):
     #print(unescape(book['volumeInfo']['description']))
     return render_template('book_details.html', book=book, reading=reading, read=read, reviews=reviews)
 
-@bp.route('/review/new/<book_id>', methods=['GET', 'POST'])
+@bp.route('/books/review/new/<book_id>', methods=['GET', 'POST'])
 def new_review(book_id):
     form = ReviewForm()
     print(form.data)
@@ -70,6 +71,7 @@ def new_review(book_id):
     #print(form.data)
     return render_template('review_form.html', form=form, book=book, rating=rating)
 
+# REST Requests
 @bp.route('/reading', methods=['POST'])
 def reading():
     book_id = request.form.get('bookId')
@@ -82,7 +84,3 @@ def reading():
     else:
         resp = jsonify({'status': 'success', 'startDate': book['start_date'].strftime('%m/%d/%y')})
     return resp
-
-@bp.route('/test')
-def test():
-    return ("<p>This is a test</p>")

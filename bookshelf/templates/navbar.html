@@ -1,0 +1,21 @@
+{% if session['_user'] %}
+<ul id="dropdown1" class="dropdown-content">
+    <li><a href="{{ url_for('books.profile', user_id=session['_user']['uid']) }}">Profile</a></li>
+    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+</ul>
+{% endif %}
+<nav>
+    <div class="nav-wrapper">
+      <a href="{{ url_for('books.index') }}" class="brand-logo"> <i class="material-icons">import_contacts</i>bookshelf</a>
+      
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="{{ url_for('books.search') }}">Search</a></li>
+        <li><a href="{{ url_for('books.index') }}">Home</a></li>
+        {% if session['_user'] %}
+        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{ session['_user']['display_name'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
+        {% else %}
+        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
