@@ -68,26 +68,27 @@
         <div class="col m10 offset-m1 description-container">
             <div class="col m2">
                 <img class="cover-img" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
-                
-                {% if not book_user_info.date_finished %}
-                <ul class="star-rating center-align">
-                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=1) }}"><i value="1" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=2) }}"><i value="2" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=3) }}"><i value="3" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=4) }}"><i value="4" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                    <a href="{{ url_for('books.new_review' , book_id=book.id, rating=5) }}"><i value="5" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                </ul>
-                <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="status-btn waves-effect waves-light btn center-align">Leave Review</a>
-                <div class="divider"></div>
-                
-                <div id="statusContainer">
-                    {% if book_user_info.date_started %}
-                        Started Reading {{ book_user_info.date_started.strftime('%m/%d/%y')}}
-                    {% else %}
-                        <button id="btnReading" class="status-btn waves-effect waves-light btn center-align" type="submit" name="action" value="{{ book.id }}">Reading</button>
-                    {% endif %}
+                {% if not book_user_info.date_rated %}
+                    {% if not book_user_info.date_finished %}
+                    <ul class="star-rating center-align">
+                        <a href="{{ url_for('books.new_review' , book_id=book.id, rating=1) }}"><i value="1" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                        <a href="{{ url_for('books.new_review' , book_id=book.id, rating=2) }}"><i value="2" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                        <a href="{{ url_for('books.new_review' , book_id=book.id, rating=3) }}"><i value="3" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                        <a href="{{ url_for('books.new_review' , book_id=book.id, rating=4) }}"><i value="4" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                        <a href="{{ url_for('books.new_review' , book_id=book.id, rating=5) }}"><i value="5" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                    </ul>
+                    <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="status-btn waves-effect waves-light btn center-align">Leave Review</a>
+                    <div class="divider"></div>
                     
-                </div>
+                    <div id="statusContainer">
+                        {% if book_user_info.date_started %}
+                            Started Reading {{ book_user_info.date_started.strftime('%m/%d/%y')}}
+                        {% else %}
+                            <button id="btnReading" class="status-btn waves-effect waves-light btn center-align" type="submit" name="action" value="{{ book.id }}">Reading</button>
+                        {% endif %}
+                        
+                    </div>
+                    {% endif %}
                 {% endif %}
                 
             </div>
@@ -119,7 +120,7 @@
                             {% endfor %}
                         </span>
                         <!--Update to date created when fixed-->
-                        on {{ book_user_info.date_finished.strftime('%b %d, %Y') }} <a href="#"><i class="material-icons create-icon">create</i></a>
+                        on {{ book_user_info.date_rated.strftime('%b %d, %Y') }} <a href="#"><i class="material-icons create-icon">create</i></a>
                     </div>
                     <div class="col m12 review-title">
                         <h6>{{ book_user_info.review_title }}</h6>
@@ -135,36 +136,36 @@
     {% endif %}
     <!-- Reviews will go below-->
     {% if book_reviews %}
-    <div class="row ">
-        <div class="col m10 offset-m1 review-container">
-            <div class="col m2">
-                <img class="user-img" src="https://via.placeholder.com/150">
-            </div>
-            <div class="col m10 ">
-                <div class="row">
-                    <div class="col m12">
-                        <a href="#">User Name</a> rated it <span class="star-rated">
-                            <i class="material-icons star-icon tiny-small" >star</i>
-                            <i class="material-icons star-icon tiny-small" >star</i>
-                            <i class="material-icons star-icon tiny-small" >star</i>
-                            <i class="material-icons star-icon tiny-small" >star_half</i>
-                            <i class="material-icons star-icon tiny-small" >star_border</i>
-                        </span>
-                        on Nov 13, 2019
-                    </div>
-                    <div class="col m12 review-title">
-                        <h6>The Pages Turned Themselves</h6>
-                    </div>
-                    <div class="col m12 review-content">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus congue cursus dui ac mollis. 
-                        Mauris ornare dui vitae porta accumsan. Aliquam rutrum justo id nunc aliquam, porttitor tempus odio varius. Nunc arcu sapien, 
-                        rhoncus in ultrices facilisis, commodo a augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur.
-                    </div>
+        {% for book_review in book_reviews %}
+            <div class="row ">
+                    <div class="col m10 offset-m1 review-container">
+                        <div class="col m2">
+                            <img class="user-img" src="https://via.placeholder.com/150">
+                        </div>
+                        <div class="col m10 ">
+                            <div class="row">
+                                <div class="col m12">
+                                    <a href="#">{{ book_review.uid }}</a> rated it <span class="star-rated">
+                                        <i class="material-icons star-icon tiny-small" >star</i>
+                                        <i class="material-icons star-icon tiny-small" >star</i>
+                                        <i class="material-icons star-icon tiny-small" >star</i>
+                                        <i class="material-icons star-icon tiny-small" >star_half</i>
+                                        <i class="material-icons star-icon tiny-small" >star_border</i>
+                                    </span>
+                                    on {{ book_review.date_rated }}
+                                </div>
+                                <div class="col m12 review-title">
+                                    <h6>{{ book_review.review_title}}</h6>
+                                </div>
+                                <div class="col m12 review-content">
+                                    {{ book_review.review_content}}
 
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
+        {% endfor %}
+    
     {% endif %}
 </div>
 {% endblock %}

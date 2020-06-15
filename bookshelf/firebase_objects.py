@@ -120,6 +120,7 @@ class Book:
         'review_content',
         'date_started',
         'date_finished',
+        'date_rated'
         'created',
         'last_updated'
     }
@@ -128,6 +129,7 @@ class Book:
         self.uid = uid
         self.bid = bid
         self.last_updated = datetime.now()
+        self.date_rated = None
         for key in data:
             if key in self.valid_db_attrs:
                 setattr(self, key, data[key])
@@ -137,34 +139,51 @@ class Book:
         db = firestore.client()
         book_ref = db.collection('users').document(uid).collection('books').document(bid)
         book = book_ref.get()
-        print(f'result" {book.__dict__}, exists {book.exists}')
+        #print(f'result" {book.__dict__}, exists {book.exists}')
         if book.exists:
             return Book(uid, bid, book.__dict__['_data'])
         return Book(uid, bid, {})
 
     @staticmethod
-    def to_dict(self):
-        print('to dict')
-        book = self.__dict__
-        del book['bid']
-        return book
-
+    def document_to_dict(doc):
+        """Convert a Firestore document to dictionary"""
+        if not doc.exists:
+            return None
+        doc_dict = doc.to_dict()
+        return doc_dict
+    
     def write_to_db(self):
         db = firestore.client()
         book_ref = db.collection('users').document(self.uid).collection('books').document(self.bid)
-        book_ref.set(self.to_dict())
+        book_ref.set(self.__dict__)
+
+    
 
     @classmethod
     def get_all_reviews(cls, bid):
-        print(bid)
+        #print(bid)
         db = firestore.client()
         reviews = db.collection_group('books').where('bid', '==', bid)
         docs = reviews.stream()
-        print([doc for doc in docs])
-        return list(map(cls.to_dict, docs))
+        #for doc in docs:
+        #    print(f'{doc.id} => {doc.to_dict()}')
+        return list(map(Book.document_to_dict, docs))
+
+    @classmethod
+    def get_all_user_by_book(cls, uid):
+        pass
 
 
 
-        
+if __name__ == '__main__':
+    firebase_admin.initialize_app()
+    bid = 'fn20CwAAQBAJ' 
+    uid = 'qAO4fDECt3NgB1tjbFF4nlWjZUj2'
+
+    #book = Book.build_from_db(uid, bid)
+    #print(book.__dict__)
+
+    Book.get_all_reviews(bid)
+
 
     

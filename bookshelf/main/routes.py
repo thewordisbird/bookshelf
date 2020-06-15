@@ -26,7 +26,7 @@ def index():
 def profile(user_id):
     session_cookie = request.cookies.get('firebase')
     user = session['_user']
-    print(user)
+    #print(user)
     #reading = get_books(user['id'], 'currently_reading')``
     #read = get_books(user['id'], 'read')
     return render_template('profile.html', user=user)
@@ -40,9 +40,14 @@ def search():
 @bp.route('/books/<book_id>', methods=['GET'])
 def book_details(book_id):
     book = get_book(book_id)
-    book_user_info = Book.build_from_db(session['_user']['uid'], book_id)
-    
-    book_reviews = book_user_info.get_all_reviews(book_id)
+    if '_user' in session:
+        
+        book_user_info = Book.build_from_db(session['_user']['uid'], book_id)
+        book_user_info.date_rated = datetime.now()
+        #print(f'book_user_info:\n {book_user_info.__dict__}\n')
+    else:
+        book_user_info = None
+    book_reviews = Book.get_all_reviews(book_id)
     print(book_reviews)
     return render_template('book_details.html', book=book, book_user_info=book_user_info, book_reviews=book_reviews)
 
@@ -50,19 +55,21 @@ def book_details(book_id):
 def new_review(book_id):
     rating = request.args.get('rating', 0)
     form = ReviewForm(rating = request.args.get('rating'))
-    print(form.data)
-    print(form.validate())
-    print(form.errors)
+    #print(form.data)
+    #print(form.validate())
+    #print(form.errors)
     if form.validate_on_submit():
         book = Book(session['_user']['uid'], book_id, form.data)
+        book.date_rated = datetime.now()
+        #print('book', book.__dict__)
         book.write_to_db()
         return redirect(url_for('books.book_details', book_id=book_id))
     
     book = get_book(book_id)
-    reading = get_reading_doc(session['_user']['uid'], book_id)
+    book_user_info = Book.build_from_db(session['_user']['uid'], book_id)
 
-    if reading:
-        form.date_started.data = reading['start_date']
+    if book_user_info.date_started:
+        form.date_started.data = book_user_info.date_started
 
     #print(form.data)
     return render_template('review_form.html', form=form, book=book, rating=int(rating))
@@ -72,12 +79,12 @@ def new_review(book_id):
 def reading():
     book_id = request.form.get('bookId')
     try:
-        print(session['_user']['uid'])
+        #print(session['_user']['uid'])
         book = Book(session['_user']['uid'], book_id, {'date_started': datetime.now()})
         book.write_to_db()
         
     except Exception as e:
-        print(e)
+        #print(e)
         resp = jsonify({'status': 'unable to process request'})
     else:
         resp = jsonify({'status': 'success', 'startDate': book.date_started.strftime('%m/%d/%y')})
