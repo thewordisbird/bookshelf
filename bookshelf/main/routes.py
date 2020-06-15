@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from flask import Flask, Blueprint, render_template, redirect, request, jsonify, json, url_for, session
 
 from .forms import SearchForm, ReviewForm
@@ -6,6 +6,7 @@ from .google_books import get_book
 from bookshelf.firebase_auth import login_required
 from bookshelf.firebase_firestore import set_reading, get_reading_doc, set_read, remove_reading_doc, get_read_doc, get_reviews, get_user
 
+from bookshelf.firebase_objects import Book
 bp = Blueprint('books', __name__)
 
 def clean_form_data(data):
@@ -39,48 +40,45 @@ def search():
 @bp.route('/books/<book_id>', methods=['GET'])
 def book_details(book_id):
     book = get_book(book_id)
-    reading = get_reading_doc(session['_user_id'], book_id)
-    read = get_read_doc(session['_user_id'], book_id)
-    reviews = get_reviews(book_id)
-    #print(unescape(book['volumeInfo']['description']))
-    return render_template('book_details.html', book=book, reading=reading, read=read, reviews=reviews)
+    book_user_info = Book.build_from_db(session['_user']['uid'], book_id)
+    
+    book_reviews = book_user_info.get_all_reviews(book_id)
+    print(book_reviews)
+    return render_template('book_details.html', book=book, book_user_info=book_user_info, book_reviews=book_reviews)
 
 @bp.route('/books/review/new/<book_id>', methods=['GET', 'POST'])
 def new_review(book_id):
-    form = ReviewForm()
+    rating = request.args.get('rating', 0)
+    form = ReviewForm(rating = request.args.get('rating'))
     print(form.data)
     print(form.validate())
     print(form.errors)
     if form.validate_on_submit():
-        data = clean_form_data(form.data)
-        set_read(session['_user_id'], book_id, data)
-        remove_reading_doc(session['_user_id'], book_id)
+        book = Book(session['_user']['uid'], book_id, form.data)
+        book.write_to_db()
         return redirect(url_for('books.book_details', book_id=book_id))
     
     book = get_book(book_id)
-    reading = get_reading_doc(session['_user_id'], book_id)
+    reading = get_reading_doc(session['_user']['uid'], book_id)
 
     if reading:
         form.date_started.data = reading['start_date']
 
-    rating = request.args.get('rating')
-    if rating:
-        rating = int(rating)
-    else:
-        rating = 0
     #print(form.data)
-    return render_template('review_form.html', form=form, book=book, rating=rating)
+    return render_template('review_form.html', form=form, book=book, rating=int(rating))
 
 # REST Requests
 @bp.route('/reading', methods=['POST'])
 def reading():
     book_id = request.form.get('bookId')
     try:
-        book = set_reading(session['_user_id'], book_id)
-        print(book)
+        print(session['_user']['uid'])
+        book = Book(session['_user']['uid'], book_id, {'date_started': datetime.now()})
+        book.write_to_db()
+        
     except Exception as e:
         print(e)
         resp = jsonify({'status': 'unable to process request'})
     else:
-        resp = jsonify({'status': 'success', 'startDate': book['start_date'].strftime('%m/%d/%y')})
+        resp = jsonify({'status': 'success', 'startDate': book.date_started.strftime('%m/%d/%y')})
     return resp

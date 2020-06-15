@@ -2,6 +2,7 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import auth, firestore
 
+# User document
 class User:
     """User object to control uniformity of input into firebase firestore
     and firebase auth.
@@ -37,14 +38,28 @@ class User:
         'disabled': 'disabled',
         'createdAt': 'created'
     }
-
+    # Methods for construction
     def __init__(self, data):
         for key in data:
             if key in self.valid_db_attrs or \
                 key in self.valid_auth_attrs:
                 setattr(self, key, data[key])
-        #self.timestamp = datetime.now()
+    
+    @classmethod
+    def build_from_db(cls, uid):
+        db = firestore.client()
+        user_ref = db.collection('users').document(uid)
+        user = user_ref.get().to_dict()
+        user['uid'] = uid
+        return User(user)
 
+    @classmethod
+    def build_from_auth(cls, uid):
+        auth_user = auth.get_user(uid).__dict__['_data']
+        return User({cls.auth_field_map[key]: value for key, value in auth_user.items() \
+            if key in cls.auth_field_map})
+
+    # Methods for data manipulation
     def to_dict_for_auth(self):
         auth_dict = {key:self.__dict__[key] for key in self.valid_auth_attrs if key in self.__dict__}
         return auth_dict
@@ -57,21 +72,8 @@ class User:
     def to_dict(self):
         return self.__dict__
 
-    @classmethod
-    def build_from_db(cls, uid):
-        db = firestore.client()
-        user_ref = db.collection('users').document(uid)
-        user = user_ref.get().to_dict()
-        user['uid'] = uid
-        
-        return User(user)
-
-    @classmethod
-    def build_from_auth(cls, uid):
-        auth_user = auth.get_user(uid).__dict__['_data']
-        return User({cls.auth_field_map[key]: value for key, value in auth_user.items() \
-            if key in cls.auth_field_map})
-
+    
+    # Methods for auth CRUD
     def add_to_auth(self):
         """Adds a User object to firebase auth.
         
@@ -84,7 +86,8 @@ class User:
             #   - ValueError - If input parameters are invlaid
             #   - FirebseError - If an error occurs while creating a session cookie
             raise e
-
+    
+    # Methods for db CRUD
     def exists_in_db(self):
         db = firestore.client()
         user_ref =  db.collection('users').document(self.uid)
@@ -107,4 +110,61 @@ class User:
         # Update created from ms string to datetime
         self.created = datetime.fromtimestamp(int(self.created)/1000.0)
        
-       
+# Book documents
+class Book:
+    valid_db_attrs = {
+        'uid',
+        'bid',
+        'rating',
+        'review_title',
+        'review_content',
+        'date_started',
+        'date_finished',
+        'created',
+        'last_updated'
+    }
+    
+    def __init__(self, uid, bid, data):
+        self.uid = uid
+        self.bid = bid
+        self.last_updated = datetime.now()
+        for key in data:
+            if key in self.valid_db_attrs:
+                setattr(self, key, data[key])
+
+    @classmethod
+    def build_from_db(cls, uid, bid):
+        db = firestore.client()
+        book_ref = db.collection('users').document(uid).collection('books').document(bid)
+        book = book_ref.get()
+        print(f'result" {book.__dict__}, exists {book.exists}')
+        if book.exists:
+            return Book(uid, bid, book.__dict__['_data'])
+        return Book(uid, bid, {})
+
+    @staticmethod
+    def to_dict(self):
+        print('to dict')
+        book = self.__dict__
+        del book['bid']
+        return book
+
+    def write_to_db(self):
+        db = firestore.client()
+        book_ref = db.collection('users').document(self.uid).collection('books').document(self.bid)
+        book_ref.set(self.to_dict())
+
+    @classmethod
+    def get_all_reviews(cls, bid):
+        print(bid)
+        db = firestore.client()
+        reviews = db.collection_group('books').where('bid', '==', bid)
+        docs = reviews.stream()
+        print([doc for doc in docs])
+        return list(map(cls.to_dict, docs))
+
+
+
+        
+
+    

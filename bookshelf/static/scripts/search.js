@@ -39,10 +39,10 @@
                             `<div class="row">` +
                                 `<div class="col m10 offset-m1">` +
                                     `<div class="col m2">` +
-                                        `<a href="/book/` + id +`"><img class="cover-img" src=` + thumbnail + `></a>` +
+                                        `<a href="/books/` + id +`"><img class="cover-img" src=` + thumbnail + `></a>` +
                                     `</div>` +
                                     `<div class="col m8">` +
-                                        `<h4><a class="title-link" href="/book/` + id +`">` + title + `</a></h4>` +
+                                        `<h4><a class="title-link" href="/books/` + id +`">` + title + `</a></h4>` +
                                         `<span class="author">` + authors + `</span><br>` +
                                         `<span class="description">` + description + `</span>`+                                    
                                     `</div>` +
