@@ -1,6 +1,6 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateTimeField, HiddenField, DateField
+from wtforms import StringField, TextAreaField, DateTimeField, HiddenField, DateField, FileField
 from wtforms.validators import DataRequired, ValidationError, optional  
 
 class NullableDateTimeField(DateTimeField):
@@ -37,3 +37,26 @@ class ReviewForm(FlaskForm):
             print('missing date')
             raise ValidationError("If setting read dates, both dates are required.")
 
+class EditProfileForm(FlaskForm):
+    valid_db_attrs = {
+        'uid',
+        'display_name',
+        'email', 
+        'created', 
+        'last_updated'
+    }
+    valid_auth_attrs = {
+        'uid',
+        'display_name',
+        'email',
+        'email_verified',
+        'phone_number',
+        'photo_url',
+        'password',
+        'diabled',
+        'app'
+    }
+
+    display_name = StringField('Display Name')
+    phone_number = StringField('Phone Number')
+    photo_url = FileField('Profile Photo')

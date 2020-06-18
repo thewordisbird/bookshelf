@@ -4,13 +4,13 @@
    
     .description-container {
         padding-bottom: 10px !important;
-        border-bottom: 1px solid #D8D8D8;
+        /*border-bottom: 1px solid #D8D8D8;*/
     }
 
     .review-container {
         
         padding-bottom: 10px !important;
-        border-bottom: 1px solid #D8D8D8;
+        /*border-bottom: 1px solid #D8D8D8;*/
     }
 
     .cover-img {
@@ -48,6 +48,7 @@
     }
     
     .divider {
+        width: 100%;
         margin-top: 10px;
         margin-bottom: 10px !important;
         border-bottom: 1px solid #D8D8D8;
@@ -56,6 +57,11 @@
     .status-btn {
         width: 95%
         
+    }
+
+    .display-section-header {
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #D8D8D8;
     }
 </style>
 {% endblock %}
@@ -68,6 +74,7 @@
         <div class="col m10 offset-m1 description-container">
             <div class="col m2">
                 <img class="cover-img" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
+                
                 {% if not book_user_info.date_rated %}
                     {% if not book_user_info.date_finished %}
                     <ul class="star-rating center-align">
@@ -103,6 +110,14 @@
 
     <!-- User Review If Availible-->
     {% if book_user_info.rating %}
+    <div class="row">
+        <div class="col m10 offset-m1">
+            <div class="display-section-header">
+                YOUR REVIEW:
+            </div>
+        </div>
+    </div>
+    
     <div class="row ">
         <div class="col m10 offset-m1 review-container">
             <div class="col m2">
@@ -111,7 +126,7 @@
             <div class="col m10 ">
                 <div class="row">
                     <div class="col m12">
-                        <a href="{{url_for('books.profile', user_id=session['_user_id'])}}">You</a> rated it <span class="star-rated">
+                        <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}">You</a> rated it <span class="star-rated">
                             {% for i in range(book_user_info.rating | int) %}
                                 <i class="material-icons star-icon tiny-small" >star</i>
                             {% endfor %}
@@ -128,7 +143,7 @@
                     <div class="col m12 review-content">
                         {{ book_user_info.review_content }}
                     </div>
-
+                    
                 </div>
             </div>
         </div>
@@ -136,37 +151,49 @@
     {% endif %}
     <!-- Reviews will go below-->
     {% if book_reviews %}
-        {% for book_review in book_reviews %}
+    <div class="row">
+        <div class="col m10 offset-m1">
+            <div class="display-section-header">
+                ALL REVIEWS:
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% for book_review in book_reviews %}
+        {% if 'date_rated' in book_review %}
             <div class="row ">
-                    <div class="col m10 offset-m1 review-container">
-                        <div class="col m2">
-                            <img class="user-img" src="https://via.placeholder.com/150">
-                        </div>
-                        <div class="col m10 ">
-                            <div class="row">
-                                <div class="col m12">
-                                    <a href="#">{{ book_review.uid }}</a> rated it <span class="star-rated">
+                <div class="col m10 offset-m1 review-container">
+                    <div class="col m2">
+                        <img class="user-img" src="https://via.placeholder.com/150">
+                    </div>
+                    <div class="col m10 ">
+                        <div class="row">
+                            <div class="col m12">
+                                <a href="{{url_for('books.profile', user_id=book_review.uid)}}">{{ book_review.display_name }}</a> rated it <span class="star-rated">
+                                    {% for i in range(book_review.rating | int) %}
                                         <i class="material-icons star-icon tiny-small" >star</i>
-                                        <i class="material-icons star-icon tiny-small" >star</i>
-                                        <i class="material-icons star-icon tiny-small" >star</i>
-                                        <i class="material-icons star-icon tiny-small" >star_half</i>
+                                    {% endfor %}
+                                    {% for j in range(book_review.rating | int, 5) %}
                                         <i class="material-icons star-icon tiny-small" >star_border</i>
-                                    </span>
-                                    on {{ book_review.date_rated }}
-                                </div>
-                                <div class="col m12 review-title">
-                                    <h6>{{ book_review.review_title}}</h6>
-                                </div>
-                                <div class="col m12 review-content">
-                                    {{ book_review.review_content}}
-
+                                    {% endfor %}
+                                </span>
+                                <!--Update to date created when fixed-->
+                                on {{ book_review.date_rated.strftime('%b %d, %Y') }} 
+                            </div>
+                            <div class="col m12 review-title">
+                                <h6>{{ book_review.review_title}}</h6>
+                            </div>
+                            <div class="col m12 review-content">
+                                {{ book_review.review_content}}
                             </div>
                         </div>
                     </div>
+                    <div class="divider"></div>
                 </div>
-        {% endfor %}
-    
-    {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
 </div>
 {% endblock %}
 

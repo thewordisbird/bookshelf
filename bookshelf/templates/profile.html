@@ -82,109 +82,145 @@
     <div class="row">
         <div class="col m10 offset-m1">
             <div class="profile-section-header">
-                USER NAME IS CURRENTLY READING:
+                {{ user.display_name.upper() }} IS CURRENTLY READING:
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col m10 offset-m1 review-book-info">
-            <div class="col m2">
-                <img class="cover-img" src="http://books.google.com/books/content?id=-mv_ryTuvo0C&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE72rABnPh-bq7_UIanKnxhR0z19_j-UWmIwveLpzcPPzoYNvhfyVRjsko_gVgIci-_k8b4geyzHoJeLp6zgJxODxXUk2yGG6ukj6ZSahKDisz73E49mDj-UolY_Rpvlm5gjPZhpa&source=gbs_api" >
-            </div>
-            <div class="col m10">
-                <div class="row">
-                    <div class="col m6">
-                        <h5>The World is flat</h5>by Author Name
-                    </div>
-                    <div class="col m6 right-align">
-                        <ul class="star-rating">
-                            <a href="#"><i value="1" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                            <a href="#"><i value="2" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                            <a href="#"><i value="3" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                            <a href="#"><i value="4" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                            <a href="#"><i value="5" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
-                        </ul>
-                        <a href="#" class="waves-effect waves-light btn">Leave Review</a>
-                    </div>
-
-                </div>              
+    {% for book in books %}
+        {%if 'date_rated' not in book %}
+        <div class="row">
+            <div class="col m10 offset-m1 review-book-info">
+                <div class="col m2">
+                    {% if 'cover_url' in book %}
+                    <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src={{ book.cover_url }} ></a>
+                    {% else %}
+                    <img class="cover-img" src="https://via.placeholder.com/150">
+                    {% endif %}
+                </div>
+                <div class="col m10">
+                    <div class="row">
+                        <div class="col m6">
+                            <h5><a href="{{ url_for('books.book_details', book_id=book.bid) }}">{{ book.title }}</a></h5>by {{ ', '.join(book.authors) }}
+                        </div>
+                        <div class="col m6 right-align">
+                            <ul class="star-rating">
+                                <a href="#"><i value="1" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                                <a href="#"><i value="2" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                                <a href="#"><i value="3" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                                <a href="#"><i value="4" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                                <a href="#"><i value="5" class="material-icons star-icon tiny-small set-review" >star_border</i></a>
+                            </ul>
+                            <a href="#" class="waves-effect waves-light btn">Leave Review</a>
+                        </div>
+    
+                    </div>              
+                </div> 
+                
             </div> 
-            
-        </div> 
-    </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+    
 
     <div class="row">
         <div class="col m10 offset-m1">
             <div class="profile-section-header">
-                USER NAME HAS READ:
+                {{ user.display_name.upper() }} HAS READ:
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col m10 offset-m1 review-book-info">
-            <div class="col m12">
-                The World Is Flat by Author Name
-            </div>
-            <div class="col m2">
-                <img class="cover-img" src="http://books.google.com/books/content?id=-mv_ryTuvo0C&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE72rABnPh-bq7_UIanKnxhR0z19_j-UWmIwveLpzcPPzoYNvhfyVRjsko_gVgIci-_k8b4geyzHoJeLp6zgJxODxXUk2yGG6ukj6ZSahKDisz73E49mDj-UolY_Rpvlm5gjPZhpa&source=gbs_api" >
-            </div>
-            <div class="col m10">
-                <div class="row">
-                    <div class="col m12">
-                        Rated it <span class="star-rated">
-                            <i class="material-icons star-icon tiny-small" >star</i>
-                            <i class="material-icons star-icon tiny-small" >star</i>
-                            <i class="material-icons star-icon tiny-small" >star</i>
-                            <i class="material-icons star-icon tiny-small" >star_half</i>
-                            <i class="material-icons star-icon tiny-small" >star_border</i>
-                        </span>
-                        on Nov 13, 2019 <i class="material-icons create-icon tiny-small">create</i>
-                    </div>
-                    <div class="col m12 review-title">
-                        <h6>The Pages Turned Themselves</h6>
-                    </div>
-                    <div class="col m12 review-content">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus congue cursus dui ac mollis. 
-                        Mauris ornare dui vitae porta accumsan. Aliquam rutrum justo id nunc aliquam, porttitor tempus odio varius. Nunc arcu sapien, 
-                        rhoncus in ultrices facilisis, commodo a augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur.
-                    </div>
-
-                </div>              
+    {% for book in books %}
+        {% if 'date_rated' in book %}
+        <div class="row">
+            <div class="col m10 offset-m1 review-book-info">
+                <div class="col m2">
+                    {% if 'cover_url' in book %}
+                    <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src={{ book.cover_url }} ></a>
+                    {% else %}
+                    <img class="cover-img" src="https://via.placeholder.com/150">
+                    {% endif %}
+                </div>
+                <div class="col m10">
+                    <div class="row">
+                        <div class="col m12">
+                            <h5><a href="{{ url_for('books.book_details', book_id=book.bid) }}">{{ book.title }}</a></h5>by {{ ', '.join(book.authors) }}
+                        </div>
+                        <div class="col m12">
+                            Rated it<span class="star-rated">
+                                {% for i in range(book.rating | int) %}
+                                    <i class="material-icons star-icon tiny-small" >star</i>
+                                {% endfor %}
+                                {% for j in range(book.rating | int, 5) %}
+                                    <i class="material-icons star-icon tiny-small" >star_border</i>
+                                {% endfor %}
+                            </span>
+                            <!--Update to date created when fixed-->
+                            on {{ book.date_rated.strftime('%b %d, %Y') }} <a href="#"><i class="material-icons create-icon">create</i></a>
+                        </div>
+                        <div class="col m12 review-title">
+                            <h6>{{ book.review_title }}</h6>
+                        </div>
+                        <div class="col m12 review-content">
+                            {{ book.review_content }}
+                        </div>
+    
+                    </div>              
+                </div> 
+                
             </div> 
-        <div class="col m12 divider"></div>  
-        <div class="col m12">
-            The World Is Flat by Author Name
         </div>
-        <div class="col m2">
-            <img class="cover-img" src="http://books.google.com/books/content?id=-mv_ryTuvo0C&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE72rABnPh-bq7_UIanKnxhR0z19_j-UWmIwveLpzcPPzoYNvhfyVRjsko_gVgIci-_k8b4geyzHoJeLp6zgJxODxXUk2yGG6ukj6ZSahKDisz73E49mDj-UolY_Rpvlm5gjPZhpa&source=gbs_api" >
-        </div>
-        <div class="col m10">
-            <div class="row">
+
+
+
+
+
+
+
+
+
+
+
+        <!--
+        <div class="row">
+            <div class="col m10 offset-m1 review-book-info">
                 <div class="col m12">
-                    Rated it <span class="star-rated">
-                        <i class="material-icons star-icon tiny-small" >star</i>
-                        <i class="material-icons star-icon tiny-small" >star</i>
-                        <i class="material-icons star-icon tiny-small" >star</i>
-                        <i class="material-icons star-icon tiny-small" >star_half</i>
-                        <i class="material-icons star-icon tiny-small" >star_border</i>
-                    </span>
-                    on Nov 13, 2019 <i class="material-icons create-icon tiny-small">create</i>
+                    The World Is Flat by Author Name
                 </div>
-                <div class="col m12 review-title">
-                    <h6>The Pages Turned Themselves</h6>
+                <div class="col m2">
+                    {% if 'cover_url' in book %}
+                    <img class="cover-img" src={{ book.cover_url }} >
+                    {% else %}
+                    <img class="cover-img" src="https://via.placeholder.com/150">
+                    {% endif %}
                 </div>
-                <div class="col m12 review-content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus congue cursus dui ac mollis. 
-                    Mauris ornare dui vitae porta accumsan. Aliquam rutrum justo id nunc aliquam, porttitor tempus odio varius. Nunc arcu sapien, 
-                    rhoncus in ultrices facilisis, commodo a augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur.
-                </div>
-
-            </div>              
-        </div> 
-
-
-    </div> 
-
+                <div class="col m10">
+                    <div class="row">
+                        <div class="col m12">
+                            Rated it <span class="star-rated">
+                                <i class="material-icons star-icon tiny-small" >star</i>
+                                <i class="material-icons star-icon tiny-small" >star</i>
+                                <i class="material-icons star-icon tiny-small" >star</i>
+                                <i class="material-icons star-icon tiny-small" >star_half</i>
+                                <i class="material-icons star-icon tiny-small" >star_border</i>
+                            </span>
+                            on Nov 13, 2019 <i class="material-icons create-icon tiny-small">create</i>
+                        </div>
+                        <div class="col m12 review-title">
+                            <h6>The Pages Turned Themselves</h6>
+                        </div>
+                        <div class="col m12 review-content">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus congue cursus dui ac mollis. 
+                            Mauris ornare dui vitae porta accumsan. Aliquam rutrum justo id nunc aliquam, porttitor tempus odio varius. Nunc arcu sapien, 
+                            rhoncus in ultrices facilisis, commodo a augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur.
+                        </div>
+    
+                    </div>              
+                </div> 
+            <div class="col m12 divider"></div>  
+        </div>-->
+        {% endif %}
+    {% endfor %}
+    
 </div>
 {% endblock %}
 

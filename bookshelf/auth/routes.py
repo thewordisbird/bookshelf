@@ -57,8 +57,7 @@ def login():
     in the db, add if needed. 
 
     Stores User object in Flask session for quick access"""
-    form = LoginForm()
-    next = request.args.get('next') or '/'
+    form = LoginForm(next = request.args.get('next') or '/')
     if request.method == 'POST':
         
         #print(f"the next hop:{form.data['next']}")

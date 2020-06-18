@@ -72,6 +72,13 @@ class User:
     def to_dict(self):
         return self.__dict__
 
+    @staticmethod
+    def document_to_dict(doc):
+        """Convert a Firestore document to dictionary"""
+        if not doc.exists:
+            return None
+        doc_dict = doc.to_dict()
+        return doc_dict
     
     # Methods for auth CRUD
     def add_to_auth(self):
@@ -101,6 +108,13 @@ class User:
         user_ref = db.collection('users').document(self.uid)
         user_ref.set(self.to_dict_for_db())
 
+    def update_db(self, update_data):
+        db = firestore.client()
+        user_ref = db.collection('users').document(self.uid)
+        user_ref.update(update_data)
+        for k,v in update_data.items():
+            setattr(self, k, v)
+
     def update_auth_data(self, auth_user):
         auth_user = auth_user.__dict__['_data']
         print(f'auth_user: {auth_user}')
@@ -109,40 +123,53 @@ class User:
                 setattr(self, self.auth_field_map[key], auth_user[key])
         # Update created from ms string to datetime
         self.created = datetime.fromtimestamp(int(self.created)/1000.0)
+    
+    def get_books(self):
+        db = firestore.client()
+        books =  db.collection('users').document(self.uid).collection('books')
+        docs = books.stream()
+        return list(map(User.document_to_dict, docs))
        
 # Book documents
 class Book:
     valid_db_attrs = {
         'uid',
         'bid',
+        'title',
+        'authors',
+        'cover_url',
         'rating',
         'review_title',
         'review_content',
         'date_started',
         'date_finished',
-        'date_rated'
+        'date_rated',
         'created',
-        'last_updated'
+        'last_updated',
+        'display_name'
     }
     
-    def __init__(self, uid, bid, data):
-        self.uid = uid
-        self.bid = bid
+    def __init__(self, data):
         self.last_updated = datetime.now()
-        self.date_rated = None
         for key in data:
             if key in self.valid_db_attrs:
                 setattr(self, key, data[key])
 
     @classmethod
     def build_from_db(cls, uid, bid):
+        data = {
+            'uid': uid,
+            'bid': bid
+        }
         db = firestore.client()
         book_ref = db.collection('users').document(uid).collection('books').document(bid)
         book = book_ref.get()
-        #print(f'result" {book.__dict__}, exists {book.exists}')
+        
+        print(f'Book get from fs:\n" {book.__dict__}, exists {book.exists}\n')
         if book.exists:
-            return Book(uid, bid, book.__dict__['_data'])
-        return Book(uid, bid, {})
+            data.update(book.__dict__['_data'])
+            return Book(data)
+        return Book(data)
 
     @staticmethod
     def document_to_dict(doc):
@@ -169,11 +196,7 @@ class Book:
         #    print(f'{doc.id} => {doc.to_dict()}')
         return list(map(Book.document_to_dict, docs))
 
-    @classmethod
-    def get_all_user_by_book(cls, uid):
-        pass
-
-
+    
 
 if __name__ == '__main__':
     firebase_admin.initialize_app()
@@ -183,7 +206,8 @@ if __name__ == '__main__':
     #book = Book.build_from_db(uid, bid)
     #print(book.__dict__)
 
-    Book.get_all_reviews(bid)
+    #Book.get_all_reviews(bid)
+    Book.get_all_user_by_book(bid)
 
 
     

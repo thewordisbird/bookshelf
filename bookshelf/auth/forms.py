@@ -6,8 +6,7 @@ class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
-    next = HiddenField('next')
-    #id_token = StringField(validators=[DataRequired()])
+    next = HiddenField('next', id='txtNext')
 
 class RegisterForm(FlaskForm):
     display_name = StringField("Name", validators=[DataRequired()])
