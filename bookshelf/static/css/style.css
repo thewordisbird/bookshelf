@@ -1,0 +1,48 @@
+.card-title {
+    margin-left: 0.75rem;
+}
+.card-title a {
+    color: black;
+    font-weight: 500;
+}
+
+.card-title a:hover {
+    text-decoration: underline;
+}
+
+.card-title .star-icon {
+    position: relative;
+    top: 3px;
+    color: orangered;
+}
+
+.book-title h5{
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+
+.book-title a {
+    color: black;
+    font-weight: 500;
+}
+
+.book-title a:hover{
+    text-decoration: underline;
+}
+
+.divider {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 5px !important;
+    border-bottom: 1px solid #D8D8D8;
+}
+
+.review-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.review-content {
+    font-size: 1.25rem;
+    font-weight: normal;
+}
