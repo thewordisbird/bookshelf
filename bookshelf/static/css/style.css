@@ -53,6 +53,18 @@
     padding-bottom: 10px !important;
 }
 
+.title-link{
+    color:black;
+}
+
+.book-info h4{
+    margin-bottom: 2px;
+}
+
+.book-info .book-author{
+    margin-bottom: 4px;
+}
+
 .cover-img {
     margin-top: 2rem;
 }
@@ -81,4 +93,25 @@
     font-size: 1.25rem;
     font-weight: 500;
     margin-bottom: 0px;    
+}
+
+.book-search{
+    box-sizing: border-box;
+    margin-top: 1rem;
+}
+
+#search {
+    width: 90%;
+}
+
+#btnSearch {
+    width: 8%;
+    border-left: none;
+    margin-left: -3px;
+    border-radius: 0 5px 5px 0;        
+}
+
+.message{
+    font-size:xxx-large;
+    text-align: center;
 }

@@ -50,7 +50,7 @@ def edit_profile(user_id):
 @bp.route('/books/search', methods=['GET'])
 def search():
     form = SearchForm()
-    return render_template('search.html', title='Find A Book', form=form)
+    return render_template('search.html', title='bookshelf | Search', form=form)
 
 @bp.route('/books/<book_id>', methods=['GET'])
 def book_details(book_id):

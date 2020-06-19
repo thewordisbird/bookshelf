@@ -29,8 +29,8 @@
             </div>
             <div class="col m10">
                 <h4>{{ book['volumeInfo']['title'] }}</h4>
-                <span class="author">{{ ', '.join(book['volumeInfo']['authors']) }}</span><br>
-                <span class="description">{{ book['volumeInfo']['description']|safe }}</span>                                
+                <span class="book-author">by {{ ', '.join(book['volumeInfo']['authors']) }}</span>
+                <p>{{ book['volumeInfo']['description']|safe }}</p>                             
             </div> 
            
         </div> 
