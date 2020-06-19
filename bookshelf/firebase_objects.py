@@ -196,6 +196,13 @@ class Book:
         #    print(f'{doc.id} => {doc.to_dict()}')
         return list(map(Book.document_to_dict, docs))
 
+    @classmethod
+    def get_all_books(cls):
+        db = firestore.client()
+        books = db.collection_group('books').order_by('last_updated', 'DESCENDING')
+        docs = books.stream()
+        return list(map(Book.document_to_dict, docs))
+
     
 
 if __name__ == '__main__':

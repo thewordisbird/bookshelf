@@ -10,9 +10,11 @@ from bookshelf.firebase_objects import User, Book
 bp = Blueprint('books', __name__)
 
 
-@bp.route('/')
+@bp.route('/', methods=['GET'])
+@bp.route('/index', methods=['GET'])
 def index():
-    return ('<p>You are at the index</p>')
+    books = Book.get_all_books()
+    return render_template('index.html', books=books)
 
 # /user routes
 @bp.route('/profile/<user_id>', methods=['GET'])
