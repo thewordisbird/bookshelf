@@ -14,13 +14,13 @@ bp = Blueprint('books', __name__)
 @bp.route('/index', methods=['GET'])
 def index():
     books = Book.get_all_books()
-    return render_template('index.html', books=books)
+    return render_template('index.html', title="bookshelf | home", books=books)
 
 # /user routes
 @bp.route('/profile/<user_id>', methods=['GET'])
 @login_required
 def profile(user_id):
-    user = User(session['_user'])
+    user = User.build_from_db(user_id)
     books = user.get_books()
     print(f'user:\n{user.__dict__}\n')
     print(f'books:\n{books}\n')
@@ -62,7 +62,7 @@ def book_details(book_id):
        
     book_reviews = Book.get_all_reviews(book_id)
     #print(f'book reviews:\n {book_reviews}\n')
-    return render_template('book_details.html', book=book, book_user_info=book_user_info, book_reviews=book_reviews)
+    return render_template('book_details.html', title="bookshelf | "+book['volumeInfo']['title'], book=book, book_user_info=book_user_info, book_reviews=book_reviews)
 
 @bp.route('/books/review/new/<book_id>', methods=['GET', 'POST'])
 @login_required

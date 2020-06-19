@@ -9,7 +9,9 @@
 .card-title a:hover {
     text-decoration: underline;
 }
-
+.star-icon {
+    
+}
 .card-title .star-icon {
     position: relative;
     top: 3px;
@@ -45,4 +47,38 @@
 .review-content {
     font-size: 1.25rem;
     font-weight: normal;
+}
+
+.book-info {
+    padding-bottom: 10px !important;
+}
+
+.cover-img {
+    margin-top: 2rem;
+}
+
+.user-status .star-icon {
+    color: black;
+}
+
+.user-status .btn {
+    margin-top: 5px;
+    width: 95%;
+}
+
+.user-img {
+    border-radius: 50%;
+}
+
+
+.card-title .create-icon {
+    position: relative;
+    top: 5px;
+    color:black;
+}
+
+.section-header {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0px;    
 }

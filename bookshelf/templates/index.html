@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% block title %}{{title}}{% endblock %}
 {% block content %}
     <div class="container">
     {% for book in books %}        
@@ -10,15 +10,14 @@
                         <div class="card-content">
                             <div class="row">
                                 <div class="card-title col m12">
-                                    <a href="{{url_for('books.profile', user_id=book.uid)}}">{{book.display_name}}</a> rated it
-                                    <span class="star-rated">
-                                        {% for i in range(book.rating | int) %}
-                                            <i class="material-icons star-icon" >star</i>
-                                        {% endfor %}
-                                        {% for j in range(book.rating | int, 5) %}
-                                            <i class="material-icons star-icon" >star_border</i>
-                                        {% endfor %}
-                                    </span>
+                                    <a href="{{url_for('books.profile', user_id=book.uid)}}">{{book.display_name}}</a> rated it                                    
+                                    {% for i in range(book.rating | int) %}
+                                        <i class="material-icons star-icon" >star</i>
+                                    {% endfor %}
+                                    {% for j in range(book.rating | int, 5) %}
+                                        <i class="material-icons star-icon" >star_border</i>
+                                    {% endfor %}  
+                                    on {{ book.date_rated.strftime('%b %d, %Y') }}                                  
                                 </div>    
                             </div>
                             <div class="row">
@@ -28,6 +27,7 @@
                                     {% else %}
                                         <img src="https://via.placeholder.com/150">
                                     {% endif %}
+                                    
                                 </div>
                                 <div class="col m10">
                                     <div class="col m12">
@@ -51,16 +51,16 @@
                     <div class="card">
                         <div class="card-content">
                             <div class="row">
-                                <div class="card-title">
+                                <div class="card-title col m12">
                                     <a href="{{url_for('books.profile', user_id=book.uid)}}">{{book.display_name}}</a> is currently reading:
                                 </div>    
                             </div>
                             <div class="row">
                                 <div class="col m2">
                                     {% if 'cover_url' in book %}
-                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src={{ book.cover_url }} ></a>
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img src={{ book.cover_url }} ></a>
                                     {% else %}
-                                        <img class="cover-img" src="https://via.placeholder.com/150">
+                                        <img src="https://via.placeholder.com/150">
                                     {% endif %}
                                 </div>
                                 <div class="col m10">
