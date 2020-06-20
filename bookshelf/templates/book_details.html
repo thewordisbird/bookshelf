@@ -14,9 +14,9 @@
                             <a href="{{ url_for('books.new_review' , book_id=book.id, rating=3) }}"><i value="3" class="material-icons star-icon set-review" >star_border</i></a>
                             <a href="{{ url_for('books.new_review' , book_id=book.id, rating=4) }}"><i value="4" class="material-icons star-icon set-review" >star_border</i></a>
                             <a href="{{ url_for('books.new_review' , book_id=book.id, rating=5) }}"><i value="5" class="material-icons star-icon set-review" >star_border</i></a>                    
-                        <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="status-btn waves-effect waves-light btn center-align">Leave Review</a>
-                        <div class="divider"></div>                        
-                        <div id="statusContainer">
+                            <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="status-btn waves-effect waves-light btn center-align">Leave Review</a>
+                            <div class="divider"></div>                        
+                            <div id="statusContainer">
                             {% if book_user_info.date_started %}
                                 Started Reading:<br>{{ book_user_info.date_started.strftime('%b %d, %Y')}}
                             {% else %}
@@ -31,8 +31,7 @@
                 <h4>{{ book['volumeInfo']['title'] }}</h4>
                 <span class="book-author">by {{ ', '.join(book['volumeInfo']['authors']) }}</span>
                 <p>{{ book['volumeInfo']['description']|safe }}</p>                             
-            </div> 
-           
+            </div>            
         </div> 
     </div>
     <!-- User Review If Availible-->

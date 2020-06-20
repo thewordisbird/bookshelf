@@ -9,9 +9,7 @@
 .card-title a:hover {
     text-decoration: underline;
 }
-.star-icon {
-    
-}
+
 .card-title .star-icon {
     position: relative;
     top: 3px;
@@ -78,8 +76,14 @@
     width: 95%;
 }
 
+.user-info h4{
+    margin-top: 2.25rem;
+    margin-bottom: .25rem;
+}
+
 .user-img {
     border-radius: 50%;
+    margin-top: 2rem;
 }
 
 
