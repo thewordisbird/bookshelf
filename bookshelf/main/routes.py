@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import Flask, Blueprint, render_template, redirect, request, jsonify, json, url_for, session
 
 from .forms import SearchForm, ReviewForm
-from .google_books import get_book
+from .google_books import get_book, get_books
 from bookshelf.firebase_auth import login_required
 from bookshelf.firebase_firestore import set_reading, get_reading_doc, set_read, remove_reading_doc, get_read_doc, get_reviews, get_user
 
@@ -12,6 +12,7 @@ bp = Blueprint('books', __name__)
 
 @bp.route('/', methods=['GET'])
 @bp.route('/index', methods=['GET'])
+@login_required
 def index():
     books = Book.get_all_books()
     return render_template('index.html', title="bookshelf | home", books=books)
@@ -49,10 +50,12 @@ def edit_profile(user_id):
 # /books routes
 @bp.route('/books/search', methods=['GET'])
 def search():
-    form = SearchForm()
-    return render_template('search.html', title='bookshelf | Search', form=form)
+    books= get_books(request.args.get('q'))['items']
+    print(books)
+    return render_template('search.html', title='bookshelf | Search', books=books)
 
 @bp.route('/books/<book_id>', methods=['GET'])
+@login_required
 def book_details(book_id):
     book = get_book(book_id)
     book_user_info = None

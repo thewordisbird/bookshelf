@@ -1,11 +1,11 @@
 (function () {
-    const txtSearch = document.getElementById('search');
-    const btnSearch = document.getElementById('btnSearch');
+    //const txtSearch = document.getElementById('search');
+    //const btnSearch = document.getElementById('btnSearch');
     const divResults = document.getElementById('divResults');
     const divMessage = document.getElementById('divMessage');
     const divLoading = document.getElementById('divLoading')
     const maxResults = 25
-    let startIndex = 0
+    let startIndex = 25
 
 
     // GET request to Google Books API
@@ -39,7 +39,7 @@
                 let title = get_obj(item.volumeInfo, 'title', '');
                 let authors = get_obj(item.volumeInfo, 'authors', []).join(', ');
                 let thumbnail = get_obj(item.volumeInfo.imageLinks, 'thumbnail', '');
-                let description = get_obj(item.volumeInfo, 'description', '').slice(0, 300) + '...'
+                let description = get_obj(item.volumeInfo, 'description', '').slice(0, 350) + '...'
                 let htmlString = 
                     `<div class="row">` +
                         `<div class="col m10 offset-m1">` +
@@ -47,18 +47,20 @@
                                 `<div class="card-content">` +
                                     `<div class="row">` +
                                         `<div class="col m2">` +
-                                            `<a href="/books/` + id +`"><img class="cover-img" src=` + thumbnail + `></a>` +
+                                            `<a href="/books/` + id +`"><img src=` + thumbnail + `></a>` +
                                         `</div>` +
                                         `<div class="col m10">` +
-                                            `<h4><a class="title-link" href="/books/` + id +`">` + title + `</a></h4>` +
-                                            `<span class="author">` + authors + `</span><br>` +
-                                            `<span class="description">` + description + `</span>`+         
+                                            `<div class="col m12"> ` +
+                                                `<span class="book-title"><h5><a href="/books/` + id +`">` + title + `</a></h5></span>by ` + authors +  
+                                            `</div>` +
+                                            `<div class="col m12 divider"></div>` +
+                                            `<div class="col m12 description-content">` + description + `</div>` +                                                         
                                         `</div> 
                                     </div>                    
                                 </div>
                             </div>
                         </div>
-                    </div>`                           
+                    </div>` 
                 divResults.innerHTML += htmlString;
             };
         }else{
@@ -68,6 +70,7 @@
     
 
     // Query google books API on search
+    /*
     btnSearch.addEventListener('click', e => {
         startIndex = 0
 
@@ -86,18 +89,19 @@
             });   
         };
     });
+    */
 
 
     // Pagination on scroll.
     $( window ).scroll( () => {
         let bottom = document.body.scrollHeight - window.innerHeight;
         // Use this if you end up doing a get request to the server and then read the url
-        //const queryString = window.location.search;
-        //const urlParams = new URLSearchParams(queryString);
-        const formData = txtSearch.value;
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        //const formData = txtSearch.value;
         divMessage.innerHTML = ''       
         if (document.body.scrollTop == bottom || document.documentElement.scrollTop == bottom) {
-            getBookSearchResults(formData).then( resp => {
+            getBookSearchResults(urlParams).then( resp => {
                 loadBooks(resp)
                 divLoading.innerHTML='';
             });  

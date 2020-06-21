@@ -4,18 +4,37 @@
     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
 </ul>
 {% endif %}
-<nav>
+<nav class="white" role="navigation">
     <div class="nav-wrapper container">
-      <a href="{{ url_for('books.index') }}" class="brand-logo"> <i class="material-icons">import_contacts</i>bookshelf</a>
-      
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="{{ url_for('books.search') }}">Search</a></li>
-        <li><a href="{{ url_for('books.index') }}">Home</a></li>
-        {% if session['_user'] %}
-        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{ session['_user']['display_name'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
-        {% else %}
-        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-        {% endif %}
-      </ul>
+        <div class="row">
+            <div class="col m3">
+                <a href="{{ url_for('books.index') }}" class="brand-logo"> <i class="material-icons">import_contacts</i>bookshelf</a>
+            </div>
+            <div class="col m6">
+                
+                     <div class="nav-search grey lighten-3">
+                         <form action="{{ url_for('books.search') }}" method="get">
+                            <div class="col s1" >
+                               <button class="nav-search-submit" type="submit"><i class="search-icon material-icons prefix">search</i></button>
+                            </div>
+                            <div class="col s11">
+                                <input type="text" name="q" placeholder="Title, Author, ISBN, etc..." id="" class="no-focus" >
+                            </div>
+                         </form>
+                        
+                    </div>
+            </div>
+            <div class="col m3">
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    {% if session['_user'] %}
+                    <li><a href="{{ url_for('books.index') }}">Home</a></li>                    
+                    <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{ session['_user']['display_name'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </div>
-  </nav>
+</nav>
