@@ -1,7 +1,7 @@
 {% if session['_user'] %}
 <ul id="dropdown1" class="dropdown-content">
     <li><a href="{{ url_for('books.profile', user_id=session['_user']['uid']) }}">Profile</a></li>
-    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+    <li><button id="btnLogout" class="btn-logout">Logout</button></li>
 </ul>
 {% endif %}
 <nav class="white" role="navigation">

@@ -60,6 +60,7 @@
         }).then(() => {
             window.location.assign(txtNext.value);
         }).catch( error => {
+            console.log('error:', error)
             divLoginMessage.innerHTML = '<span class="error-message">' + error.message + '</span>'            
         });
     });

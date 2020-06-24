@@ -190,3 +190,18 @@ form button {
 form button:focus{
     background-color: transparent;
 }
+
+.dropdown-content .btn-logout {
+    display: block;
+    
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 16px 14px 16px 14px;
+}
+
+.dropdown-content li{
+    text-align: center;
+}
+

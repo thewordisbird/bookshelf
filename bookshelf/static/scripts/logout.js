@@ -1,6 +1,6 @@
 (function() {
-    const btnLogout = document.getElementById('btnLogOut')
-
+    const btnLogout = document.getElementById('btnLogout')
+    
     const postToSessionLogOut = function(url) {
         // POST to session login endpoint.
         return $.ajax({
@@ -9,7 +9,7 @@
           contentType: 'application/x-www-form-urlencoded'
         });
       };
-
+        
       // Add Logout Event
       btnLogout.addEventListener('click', e => {
         postToSessionLogOut('/sessionLogout').then(() => {

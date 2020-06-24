@@ -9,7 +9,7 @@
                 <div class="user-status">
                     {% if not book_user_info.date_rated %}
                         {% if not book_user_info.date_finished %}                    
-                            <a href="{{ url_for('books.new_review' , book_id=book.id, rating=1) }}"><i value="1" class="material-icons star-icon" >star_border</i></a>
+                            <a href="{{ url_for('books.new_review' , book_id=book.id, rating=1) }}"><i value="1" class="material-icons star-icon set-review" >star_border</i></a>
                             <a href="{{ url_for('books.new_review' , book_id=book.id, rating=2) }}"><i value="2" class="material-icons star-icon set-review" >star_border</i></a>
                             <a href="{{ url_for('books.new_review' , book_id=book.id, rating=3) }}"><i value="3" class="material-icons star-icon set-review" >star_border</i></a>
                             <a href="{{ url_for('books.new_review' , book_id=book.id, rating=4) }}"><i value="4" class="material-icons star-icon set-review" >star_border</i></a>
