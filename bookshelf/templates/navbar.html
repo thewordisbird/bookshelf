@@ -12,13 +12,13 @@
             </div>
             <div class="col m6">
                 
-                     <div class="nav-search grey lighten-3">
+                     <div class="nav-search grey lighten-4">
                          <form action="{{ url_for('books.search') }}" method="get">
                             <div class="col s1" >
                                <button class="nav-search-submit" type="submit"><i class="search-icon material-icons prefix">search</i></button>
                             </div>
                             <div class="col s11">
-                                <input type="text" name="q" placeholder="Title, Author, ISBN, etc..." id="" class="no-focus" >
+                                <input type="text" name="q" placeholder="Title, Author, ISBN, etc..." id="" class="no-focus" required >
                             </div>
                          </form>
                         

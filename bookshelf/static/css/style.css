@@ -1,3 +1,6 @@
+body {
+    background-color: WhiteSmoke;
+}
 .card-title {
     margin-left: 0.75rem;
 }
@@ -10,18 +13,17 @@
     text-decoration: underline;
 }
 
-.card-title .star-icon {
-    position: relative;
-    top: 3px;
-    color: orangered;
-}
-
 .card-content .star-icon {
     position: relative;
     top: 3px;
     color: black;
 }
 
+.card-title .star-icon {
+    position: relative;
+    top: 3px;
+    color: orangered;
+}
 .book-title h5{
     margin-top: 0px;
     margin-bottom: 2px;
@@ -44,6 +46,7 @@
 }
 
 .review-title {
+    margin-top: .75rem;
     font-size: 1.25rem;
     font-weight: 500;
 }
@@ -97,6 +100,9 @@
     margin-top: 2rem;
 }
 
+.card-content .user-img {
+    margin-top: 0;
+}
 
 .card-title .create-icon {
     position: relative;
@@ -185,6 +191,7 @@ form button {
     border-top: 0;
     border-bottom: 0;
     cursor: pointer;
+    background-color: whitesmoke
 }
 
 form button:focus{
