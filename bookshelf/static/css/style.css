@@ -1,6 +1,15 @@
+html, body {
+    height: 100%;
+}
 body {
     background-color: WhiteSmoke;
+    color: #444;
 }
+
+.container {
+    height: inherit;
+}
+
 .card-title {
     margin-left: 0.75rem;
 }
@@ -137,6 +146,10 @@ body {
     text-align: center;
 }
 
+nav {
+    margin-bottom: 15px;
+}
+
 nav .brand-logo {
     color: #444;
 }
@@ -186,6 +199,7 @@ form *{
   }
 
 form button {
+    border-color: white;
     border-width: 1px;
     border-left: 0;
     border-top: 0;
@@ -212,3 +226,10 @@ form button:focus{
     text-align: center;
 }
 
+.login-form{
+    padding-top: 25rem;
+}
+
+.login-form button{
+    width: 100%;
+}

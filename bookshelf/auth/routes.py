@@ -45,7 +45,7 @@ def register():
             #TODO: Handle errors gracefully
             print(f'Registration Error: {e}')
             return abort(401, 'Unable to register')
-    return render_template('register.html', form=form)
+    return render_template('register.html', title="bookshelf | Register", form=form)
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -89,7 +89,7 @@ def login():
             # CHANGE TO SECURE FOR PRODUCTION!!
             resp.set_cookie('firebase', session_cookie, expires=expires, httponly=True, secure=False)
             return resp
-    return render_template('login.html', form=form, next=next, title="Login")
+    return render_template('login.html', title="bookshelf | Login", form=form, next=next)
 
 
 
@@ -101,7 +101,7 @@ def reset_password():
     if form.validate_on_submit():
         send_password_reset_email(form.data['email'])
         return redirect(url_for('auth.login'))
-    return render_template('reset_password.html', form=form, title='Reset Password')
+    return render_template('reset_password.html', title="bookshelf | Reset Password", form=form)
 
 @bp.route('/logout')
 def logout():
@@ -118,22 +118,3 @@ def session_logout():
         session.pop('_user')
     print(session.get('_user', None))
     return resp
-
-
-@bp.route('/adminOnly')
-@restricted(admin=True)
-def admin_only():
-    return render_template('admin_only.html', title='Admin')
-
-
-@bp.route('/makeAdmin')
-def set_admin():
-    print(decode_claims(session['_user_id']))
-    set_custom_user_claims(session['_user_id'], {'admin': True})
-    print(decode_claims(session['_user_id']))
-    return redirect(url_for('auth.access_restricted_content'))
-
-@bp.route('/checkAdmin')
-def check_admin():
-    print(decode_claims(session['_user_id']))
-    return redirect(url_for('auth.access_restricted_content'))

@@ -25,7 +25,7 @@ def profile(user_id):
     books = user.get_books()
     print(f'user:\n{user.__dict__}\n')
     print(f'books:\n{books}\n')
-    return render_template('profile.html', user=user, books=books)
+    return render_template('profile.html', title=f"bookshelf | {user.display_name}", user=user, books=books)
 
 
 @bp.route('/profile/edit/<user_id>', methods=['GET', 'POST'])
@@ -65,7 +65,7 @@ def book_details(book_id):
        
     book_reviews = Book.get_all_reviews(book_id)
     #print(f'book reviews:\n {book_reviews}\n')
-    return render_template('book_details.html', title="bookshelf | "+book['volumeInfo']['title'], book=book, book_user_info=book_user_info, book_reviews=book_reviews)
+    return render_template('book_details.html', title=f"bookshelf | {book['volumeInfo']['title']}", book=book, book_user_info=book_user_info, book_reviews=book_reviews)
 
 @bp.route('/books/review/new/<book_id>', methods=['GET', 'POST'])
 @login_required
@@ -98,7 +98,7 @@ def new_review(book_id):
     if 'date_started' in book_user_info.__dict__:
         form.date_started.data = book_user_info.date_started
     #print(form.data)
-    return render_template('review_form.html', form=form, book=book, rating=int(rating))
+    return render_template('review_form.html', title=f"bookshelf | New Review | {book['volumeInfo']['title']}", form=form, book=book, rating=int(rating))
 
 # REST Requests
 @bp.route('/reading', methods=['POST'])

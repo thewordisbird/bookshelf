@@ -5,7 +5,11 @@
     <div class="row ">
         <div class="col m10 offset-m1 book-info">
             <div class="col m2 center-align">
-                <img class="cover-img" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
+                {% if 'imageLinks' in book.volumeInfo %}
+                <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="{{ book.volumeInfo.imageLinks.thumbnail }}"></a>
+                {% else %}
+                <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="https://via.placeholder.com/150"></a>
+                {% endif %}    
                 <div class="user-status">
                     {% if not book_user_info.date_rated %}
                         {% if not book_user_info.date_finished %}                    
