@@ -38,3 +38,10 @@
         </div>
     </div>
 </nav>
+{% if session['_user'] %}
+{% block body_scripts %}
+
+<script src="{{ url_for('static', filename='scripts/logout.js') }}"></script>
+
+{% endblock %}
+{% endif %}

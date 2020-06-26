@@ -12,5 +12,5 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING=True
-    GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_TEST_CREDENTIALS')
     

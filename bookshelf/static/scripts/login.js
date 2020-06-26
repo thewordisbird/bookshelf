@@ -7,7 +7,7 @@
     const csrfToken = document.getElementById('csrf_token');
     const btnLogOut = document.getElementById('btnLogOut')
     const btnGoogle = document.getElementById('btnGoogle')
-    const btnFacebook = document.getElementById('btnFacebook')
+    //const btnFacebook = document.getElementById('btnFacebook')
     const divLoginMessage = document.getElementById('loginMessage')
     const divProviderMessage = document.getElementById('providerMessage')
 
@@ -91,6 +91,7 @@
     });
 
     // Add Oauth2 Sign In With Facebook Login Event
+    /*
     btnFacebook.addEventListener('click', e=> {
         const auth = firebase.auth();
         const provider = new firebase.auth.FacebookAuthProvider();
@@ -114,4 +115,5 @@
             divProviderMessage.innerHTML = '<span class="error-message">' + error.message + '</span>'            
         });
     });
+    */
 }());

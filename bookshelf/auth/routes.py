@@ -37,8 +37,11 @@ def register():
         #print(f'route user obj: {user.__dict__}')
         try:
             auth_user = user.add_to_auth()
+            print('created auth_user')
             user.update_auth_data(auth_user)
+            print('update_auth_data')
             user.add_to_db()
+            print('add_to_db')
             #print(f'user: {user}\nauth_user: {auth_user}')
             return redirect(url_for('auth.login'))      
         except Exception as e:

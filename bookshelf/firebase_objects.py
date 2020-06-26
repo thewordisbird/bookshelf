@@ -103,7 +103,7 @@ class User:
 
     def add_to_db(self):
         db = firestore.client()
-        self.created = datetime.fromtimestamp(int(self.created)/1000.0)
+        #self.created = datetime.fromtimestamp(int(self.created)/1000.0)
         setattr(self, 'last_updated', self.created)
         user_ref = db.collection('users').document(self.uid)
         user_ref.set(self.to_dict_for_db())

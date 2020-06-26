@@ -2,13 +2,11 @@ from datetime import datetime
 from flask import Flask, Blueprint, render_template, redirect, request, jsonify, json, url_for, session
 
 from .forms import SearchForm, ReviewForm
-from .google_books import get_book, get_books
+from bookshelf.google_books_api import get_book, get_books
 from bookshelf.firebase_auth import login_required
-from bookshelf.firebase_firestore import set_reading, get_reading_doc, set_read, remove_reading_doc, get_read_doc, get_reviews, get_user
 
 from bookshelf.firebase_objects import User, Book
 bp = Blueprint('books', __name__)
-
 
 @bp.route('/', methods=['GET'])
 @bp.route('/index', methods=['GET'])
@@ -73,9 +71,9 @@ def new_review(book_id):
     rating=request.args.get('rating', 0)
     form = ReviewForm(rating=rating)
     book = get_book(book_id)
-    #print(form.data)
-    #print(form.validate())
-    #print(form.errors)
+    print(form.data)
+    print(form.validate())
+    print(form.errors)
     if form.validate_on_submit():
         data = {
             'uid': session['_user']['uid'],

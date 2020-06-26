@@ -8,7 +8,7 @@ def create_app(config=DevelopmentConfig):
     """
     app = Flask(__name__)
     app.config.from_object(config)
-
+    print(f"create app settings: {app.config['SECRET_KEY']}")
     # Initialize Extensions
     firebase_admin.initialize_app()
 
