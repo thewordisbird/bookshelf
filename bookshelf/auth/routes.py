@@ -9,8 +9,7 @@ from .forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
 from bookshelf.firebase_auth import login_required, restricted, \
-    create_session_cookie, create_new_user, send_password_reset_email, \
-        set_custom_user_claims, decode_claims, add_auth_user
+    create_session_cookie, send_password_reset_email
 from bookshelf.firebase_firestore import User, Review, add_user, get_user
 
 from bookshelf.firebase_objects import User
@@ -34,15 +33,22 @@ def register():
     #print(form.data, form.validate(), form.errors)
     if form.validate_on_submit():
         user = User(form.data)
-        #print(f'route user obj: {user.__dict__}')
+        # -- UPDATE --
+        # email, password, display_name = form.data['email'], form.data['password'], form.data['display_name']
+        # -- END UPDATE --
         try:
+            # -- UPDATE --
+            # Create new firebase auth user
+            # auth_user = auth.create_new_user_with_email_password_and_display_name()
+
+            # Add user to firestore
+            # firestore.set_document(f"users/{auth_user['uid']}", auth_user)
+            # -- END UPDATE --
+
             auth_user = user.add_to_auth()
-            print('created auth_user')
             user.update_auth_data(auth_user)
-            print('update_auth_data')
             user.add_to_db()
-            print('add_to_db')
-            #print(f'user: {user}\nauth_user: {auth_user}')
+            
             return redirect(url_for('auth.login'))      
         except Exception as e:
             #TODO: Handle errors gracefully
@@ -62,18 +68,30 @@ def login():
     Stores User object in Flask session for quick access"""
     form = LoginForm(next = request.args.get('next') or '/')
     if request.method == 'POST':
-        
-        #print(f"the next hop:{form.data['next']}")
-        id_token = request.form.get('idToken')
+        request_data = request.get_json()
+        id_token = request_data['idToken']
         expires_in = datetime.timedelta(days=5)
         try:
-            session_cookie =  create_session_cookie(id_token, expires_in)
+            # -- UPDATE --
+            # session_cookie = auth.create_session_cookie(id_token, expires_in)
+            # -- END UPDATE --
+
+            session_cookie =  create_session_cookie(id_token, expires_in)            
         except Exception:
             # TODO: respond with error to display message to user
             # see create_session_cookie function for info on possible errors
             return abort(401, 'Failed to create a session cookie')
         else:
-            auth_user = User.build_from_auth(request.form.get('uid'))
+            # -- UPDATE --
+            # user = firestore.get_document(f"users/{request_data['uid']})
+            # if user is None:
+            #   auth_user = auth.get_user(request_data['uid'])
+            #   user = firestore.set_document(f"users/{auth_user['uid']}", auth_user)
+            #
+            # session['_user'] = user
+            # -- END UPDATE
+
+            auth_user = User.build_from_auth(request_data['uid'])
             # Check if user is in firestore - users logged in with a provider
             # will need to be added to firestore on first login
             if not auth_user.exists_in_db():
@@ -87,21 +105,24 @@ def login():
             # Create response to client
             #next = request.args.get('next') or url_for('auth.index')
             #print(f'Next: {next}')
+
             resp = jsonify({'status': 'success'})
             expires = datetime.datetime.now() + expires_in
             # CHANGE TO SECURE FOR PRODUCTION!!
             resp.set_cookie('firebase', session_cookie, expires=expires, httponly=True, secure=False)
+            print('RESP', resp)
             return resp
     return render_template('login.html', title="bookshelf | Login", form=form, next=next)
-
-
-
 
 
 @bp.route('/resetPassword', methods=['GET', 'POST'])
 def reset_password():
     form = ResetPasswordForm()
     if form.validate_on_submit():
+        # -- UPDATE --
+        # auth.send_password_reset_email(form.data['email'])
+        # -- END UPDATE
+        
         send_password_reset_email(form.data['email'])
         return redirect(url_for('auth.login'))
     return render_template('reset_password.html', title="bookshelf | Reset Password", form=form)

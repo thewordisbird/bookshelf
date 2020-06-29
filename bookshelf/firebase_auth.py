@@ -5,7 +5,7 @@ import requests
 from requests import HTTPError
 
 import firebase_admin
-from firebase_admin import credentials, auth
+from firebase_admin import auth
 
 from flask import request, redirect, url_for, session, abort
 
@@ -60,6 +60,7 @@ def create_session_cookie(id_token, expires_in):
     try:
         # Create the session cookie. This will also verify the ID token in the process.
         # The session cookie will have the same claims as the ID token.
+        print(type(id_token))
         session_cookie = auth.create_session_cookie(id_token, expires_in=expires_in)
         return session_cookie
     except Exception as e:
