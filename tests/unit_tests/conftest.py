@@ -4,6 +4,7 @@ import json
 from bookshelf import create_app
 from config import TestingConfig
 import requests
+from firebase_admin import auth, firestore
 
 TEST_USER_EMAIL = "test_user@email.com"
 TEST_USER_PASSWORD = "123123"
@@ -13,6 +14,8 @@ def app():
     app = create_app()   
     app.config.from_object(TestingConfig)   
     yield app
+
+    # delete firebase app instance?
 
 @pytest.fixture
 def client(app):
@@ -29,8 +32,6 @@ def login_json_data():
     json_data = {'idToken': firebase_response['idToken'], 'uid': firebase_response['localId']}
     return json_data
         
-
-
 def sign_in_with_email_and_password(email, password):
     endpoint = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={os.environ.get('WEB_API_TEST_KEY')}"
     headers = {"content-type": "application/json; charset=UTF-8"}
@@ -46,3 +47,28 @@ def raise_detailed_error(request_object):
         # raise detailed error message
         # TODO: Check if we get a { "error" : "Permission denied." } and handle automatically
         raise HTTPError(e, request_object.text)
+
+@pytest.fixture
+def mock_register_data():
+    mock_register_data = {
+        'display_name': 'Mock User',
+        'email': 'mock_user@gmail.com',
+        'password': '123123',
+        'confirm_password': '123123'
+    }
+
+    yield mock_register_data
+
+    # Clean Up auth and database
+    print('cleaning up...')
+    user = auth.get_user_by_email(mock_register_data['email'])
+    print(user.uid)
+    # Delete Auth User
+    auth.delete_user(user.uid)
+
+    # Delete User from firestore
+    db = firestore.client()
+    doc_ref = db.document(f"users/{user.uid}")
+    doc_ref.delete()
+
+    

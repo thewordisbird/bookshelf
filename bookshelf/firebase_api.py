@@ -28,6 +28,50 @@ def initialize_app(key_path=None):
 
 class Firebase:
 
+    def __init__(self, flask_app=None):
+        self.flask_app = flask_app
+        self.firebase_app = None
+
+        if self.flask_app is not None:
+            self.init_app(flask_app)
+
+    def init_app(self, flask_app):
+        """
+        Returns an initialized Firebase object.
+
+        For local development, requires a service account key. To download,
+        goto console.firebase.google.com > Select Project > Project Settings >
+        Service Accounts > Generate New Private Key. Save Key and set as 
+        enviornmental variable
+        
+        Adds the firebase connection to the app context
+        """
+
+        # Probably needs to be run in the application context to access the
+        # correct configuration keys for Production/Development/Testing
+        self.flask_app = flask_app
+        cred_path = self.flask_app.config('GOOGLE_APPLICATION_CREDENTIALS')
+
+        try:
+            if cred_path:
+                cred = credentials.Certificate(cred_path)            
+            else:
+                cred = credentials.ApplicationDefault()
+        except ValueError:
+            print('App already initialized')
+        except Exception as e:
+            print(f'error: {e}')
+            raise e
+        else:
+            self.firebase_app = firebase_admin.initialize_app(cred)
+            self.flask_app.firebase_app = self
+                
+
+    def delete_app(self):
+        """Deletes the firebase connection"""
+        # Probably needs error hadling incase already deleted. 
+        firebase_admin.delete_app(self.firebase_app)
+
     def auth(self):
         return Auth()
 

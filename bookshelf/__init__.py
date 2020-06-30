@@ -5,7 +5,7 @@ from firebase_admin import credentials
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
-def create_app(config=DevelopmentConfig):
+def create_app(config=TestingConfig):
     """Create an application instance with the desired configuration.
 
     Also where extentions and blueprints are registered with the instance
@@ -15,11 +15,13 @@ def create_app(config=DevelopmentConfig):
 
     # Initialize Extensions
     cred_path = app.config.get('GOOGLE_APPLICATION_CREDENTIALS', None)
+    print("cred_path:", cred_path)
     if cred_path:
         cred = credentials.Certificate(cred_path)
     else:
         cred = credentials.ApplicationDefault()
     try:
+        print(cred.project_id)
         firebase_admin.initialize_app(cred)
     except ValueError:
         pass

@@ -19,18 +19,12 @@ csrf = CSRFProtect(current_app)
 
 bp = Blueprint('auth', __name__, static_folder='static')
 
-def sans_csrf(data):
-    """Remove CSRF From form data, convert rating to number"""
-    del data['csrf_token']
-    return data
-
-
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     """Form to register collect user information to register user with app"""
     form = RegisterForm()
 
-    #print(form.data, form.validate(), form.errors)
+    print(form.data, form.validate(), form.errors)
     if form.validate_on_submit():
         user = User(form.data)
         # -- UPDATE --
@@ -122,14 +116,10 @@ def reset_password():
         # -- UPDATE --
         # auth.send_password_reset_email(form.data['email'])
         # -- END UPDATE
-        
+
         send_password_reset_email(form.data['email'])
         return redirect(url_for('auth.login'))
     return render_template('reset_password.html', title="bookshelf | Reset Password", form=form)
-
-@bp.route('/logout')
-def logout():
-    return render_template('logout.html')
 
 @bp.route('/sessionLogout', methods=['POST'])
 @csrf.exempt
@@ -137,7 +127,7 @@ def session_logout():
     print('in session logout')
     resp = jsonify({'status': 'success'})
     resp.set_cookie('firebase', expires=0)
-    print(session['_user'])
+    print('Session...:', session['_user'])
     if '_user' in session:
         session.pop('_user')
     print(session.get('_user', None))
