@@ -43,14 +43,9 @@ class Firebase:
         goto console.firebase.google.com > Select Project > Project Settings >
         Service Accounts > Generate New Private Key. Save Key and set as 
         enviornmental variable
-        
-        Adds the firebase connection to the app context
         """
-
-        # Probably needs to be run in the application context to access the
-        # correct configuration keys for Production/Development/Testing
         self.flask_app = flask_app
-        cred_path = self.flask_app.config('GOOGLE_APPLICATION_CREDENTIALS')
+        cred_path = self.flask_app.config.get('GOOGLE_APPLICATION_CREDENTIALS')
 
         try:
             if cred_path:
@@ -64,7 +59,6 @@ class Firebase:
             raise e
         else:
             self.firebase_app = firebase_admin.initialize_app(cred)
-            self.flask_app.firebase_app = self
                 
 
     def delete_app(self):
@@ -83,6 +77,9 @@ class Firebase:
 
 
 class Auth:
+    def __init__(self):
+        pass
+    
     def welcome_user(self, name):
         print(f'hello, {name}')
     
@@ -183,7 +180,7 @@ class Firestore:
                 doc_ref.set(item)
 
     @staticmethod
-    def document_to_dict(document)
+    def document_to_dict(document):
         """Convert a Firestore document to dictionary"""
         if document.exists:
             doc_dict = doc.to_dict()

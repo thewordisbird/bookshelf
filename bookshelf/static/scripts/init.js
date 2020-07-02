@@ -10,6 +10,7 @@ const firebaseConfig = {
     measurementId: "G-EGYBFHZGBS"
   };
 
+  // Use to populate DB and if doing any system tests in the future
   const firebaseTestConfig = {
     apiKey: "AIzaSyBBBxvB-57KF3_q0-Mnja2gDCIzONEtUZI",
     authDomain: "bookshelf-test-20855.firebaseapp.com",

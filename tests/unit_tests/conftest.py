@@ -12,8 +12,8 @@ TEST_USER_PASSWORD = "123123"
 
 @pytest.fixture()
 def app():
-    app = create_app()   
-    app.config.from_object(TestingConfig)   
+    app = create_app(TestingConfig)   
+    #app.config.from_object(TestingConfig)   
     yield app
 
     # delete firebase app instance?

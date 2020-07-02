@@ -2,10 +2,14 @@ from flask import Flask
 from config import DevelopmentConfig, TestingConfig
 import firebase_admin
 from firebase_admin import credentials
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+#from dotenv import load_dotenv, find_dotenv
+#load_dotenv(find_dotenv())
+from bookshelf.firebase_wrapper import Firebase
 
-def create_app(config=TestingConfig):
+# Global Objects
+firebase = Firebase()
+
+def create_app(config=DevelopmentConfig):
     """Create an application instance with the desired configuration.
 
     Also where extentions and blueprints are registered with the instance
@@ -13,21 +17,8 @@ def create_app(config=TestingConfig):
     app = Flask(__name__)
     app.config.from_object(config)
 
-    # Initialize Extensions
-    cred_path = app.config.get('GOOGLE_APPLICATION_CREDENTIALS', None)
-    print("cred_path:", cred_path)
-    if cred_path:
-        cred = credentials.Certificate(cred_path)
-    else:
-        cred = credentials.ApplicationDefault()
-    try:
-        print(cred.project_id)
-        firebase_admin.initialize_app(cred)
-    except ValueError:
-        pass
-    except Exception as e:
-        print(e)
-        raise e
+    # Initialize firebase    
+    firebase.init_app(app)
 
     # Register Blueprints
     from bookshelf.main.routes import bp as books_bp
