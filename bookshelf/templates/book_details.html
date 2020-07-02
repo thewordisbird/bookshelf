@@ -171,9 +171,9 @@
         return $.ajax({
           type:'POST',
           url: '/reading',
-          data: {bookId: bookId},
+          data: JSON.stringify({bookId: bookId}),          
           dataType: 'json',
-          contentType: 'application/x-www-form-urlencoded'
+          contentType: 'application/json;charset=UTF-8'
         });
     };
 

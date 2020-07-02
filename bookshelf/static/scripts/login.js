@@ -31,7 +31,7 @@
             'X-CSRFToken': csrfToken
           },
           url: url,
-          data: JSON.stringify({idToken: idToken, uid:uid}),
+          data: JSON.stringify({idToken: idToken, uid: uid}),
           dataType: 'json',
           contentType: 'application/json;charset=UTF-8'
         });

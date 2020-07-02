@@ -32,9 +32,14 @@ def profile(user_id):
 
     user = User.build_from_db(user_id)
     books = user.get_books()
-    print(f'user:\n{user.__dict__}\n')
-    print(f'books:\n{books}\n')
-    return render_template('profile.html', title=f"bookshelf | {user.display_name}", user=user, books=books)
+    #print(f'user:\n{user.__dict__}\n')
+    #print(f'books:\n{books}\n')
+    print('PROFILE SESSION', session)
+    if user.uid == session['_user']['uid']:
+        active_user = True
+    else:
+        active_user = False
+    return render_template('profile.html', title=f"bookshelf | {user.display_name}", user=user, books=books, active_user=active_user)
 
 
 @bp.route('/profile/edit/<user_id>', methods=['GET', 'POST'])
@@ -62,7 +67,7 @@ def edit_profile(user_id):
 def search():
     # Import google_books_api and call google_books_api.get_books()
     books= get_books(request.args.get('q'))['items']
-    print(books)
+    #print(books)
     return render_template('search.html', title='bookshelf | Search', books=books)
 
 @bp.route('/books/<book_id>', methods=['GET'])
@@ -76,7 +81,7 @@ def book_details(book_id):
         # -- END UPDATE
 
         book_user_info = Book.build_from_db(session['_user']['uid'], book_id)
-        print(f'book_user_info:\n {book_user_info.__dict__}\n')
+        #print(f'book_user_info:\n {book_user_info.__dict__}\n')
     
     # -- UPDATE --
     # book_reviews = firestore.get_collection_group("books", where=("bid", "==", book_id))
@@ -92,9 +97,9 @@ def new_review(book_id):
     rating=request.args.get('rating', 0)
     form = ReviewForm(rating=rating)
     book = get_book(book_id)
-    print(form.data)
-    print(form.validate())
-    print(form.errors)
+    #print(form.data)
+    #print(form.validate())
+    #print(form.errors)
     if form.validate_on_submit():
         data = {
             'uid': session['_user']['uid'],
@@ -112,9 +117,9 @@ def new_review(book_id):
         # book = firestore.set_document(f"users/{data['uid']}/books/{data['bid']}", data)
         # -- END UPDATE --
         
-        print(data)
+        #print(data)
         book = Book(data)
-        print('book', book.__dict__)
+        #print('book', book.__dict__)
         book.write_to_db()
         return redirect(url_for('books.book_details', book_id=book_id))
 
@@ -134,19 +139,25 @@ def new_review(book_id):
 # REST Requests
 @bp.route('/reading', methods=['POST'])
 def reading():
-    book_id = request.form.get('bookId')
+    #book_id = request.form.get('bookId')
+    request_data = request.get_json()
+    print(type(request_data))
+    book_id = request_data['bookId']
+    print(book_id)
+    #print("BOOK ID",request.get_json()['bookId'].value())
     book = get_book(book_id)
+    #print(book)
     data = {
         'uid': session['_user']['uid'],
         'display_name': session['_user']['display_name'],
-        'bid': request.form.get('bookId'),
+        'bid': book_id,
         'title': book['volumeInfo']['title'],
         'authors': book['volumeInfo']['authors'],
         'cover_url': book['volumeInfo']['imageLinks']['thumbnail'],
         'date_started': datetime.now()
     }
     try:
-        # -- UPDATE --
+        # -- UPDATE -- (Also convert to JSON on update)
         # firestore.set_document(f"users/{data['uid']}/books/{data['bid']}", data)
         # -- END UPDATE --
 
@@ -160,3 +171,7 @@ def reading():
     else:
         resp = jsonify({'status': 'success', 'startDate': book.date_started.strftime('%m/%d/%y')})
     return resp
+
+@bp.route('/test')
+def test():
+    return "<p>Hello, World</p>"

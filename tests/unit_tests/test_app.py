@@ -1,5 +1,7 @@
 import os
-
+import datetime
+import json
+import pytest
 from flask import current_app, request, session
 from config import TestingConfig, Config
 
@@ -85,4 +87,176 @@ def test_session_logout(app, client):
 
 
 # Test Main Routes
+def test_index_logged_in(client, mock_logged_in_user, captured_templates):
+    
+    
+    # Set mock request header
+    session_cookie, uid = mock_logged_in_user.values()
+    client.set_cookie('localhost', 'firebase', session_cookie)
+
+    rv = client.get('/')
+    
+    assert len(captured_templates) != 0
+    template, context = captured_templates[0]
+
+    assert template.name == 'index.html'
+    assert context['title'] == 'bookshelf | home'
+    # The test database is pre-populated with 2 books.
+    assert len(context['books']) == 2
+
+def test_profile_logged_in(client, mock_logged_in_user, captured_templates):
+    session_cookie, uid = mock_logged_in_user.values()
+    
+    # Set mock request header
+    client.set_cookie('localhost', 'firebase', session_cookie)
+    
+    # Add user to mock flask session
+    with client.session_transaction() as sess:
+        sess['_user'] = {
+            'display_name': 'Test User',
+            'uid': uid
+        }
+        sess.modified = True
+    
+    rv = client.get(f'/profile/{uid}')
+    
+    assert len(captured_templates) != 0
+    template, context = captured_templates[0]
+
+    assert template.name == 'profile.html'
+    assert context['title'] == 'bookshelf | Test User'
+    # The database is pre-populated with one user: Test User
+    # who has 2 books:
+    #   Python Testing With Python
+    #   Intorduction To Algorithms
+    assert context['user'].display_name == 'Test User'
+    assert len(context['books']) == 2
+    
+def test_search(client, captured_templates):
+    rv = client.get('/books/search?q=test')
+
+    assert len(captured_templates) != 0
+    template, context = captured_templates[0]
+
+    assert template.name == 'search.html'
+    assert context['title'] == 'bookshelf | Search'
+    # Searching for a title containnig 'test' should result in results
+    assert len(context['books']) > 0
+
+@pytest.mark.parametrize('book_id, title, reading, reviewed', 
+    [
+        ('NLngYyWFl_YC', 'Introduction To Algorithms', True, False),
+        ('hs_pAQAACAAJ', 'Python Testing with Pytest', False, True),
+        ('CGVDDwAAQBAJ', 'Where the Crawdads Sing', False, False)
+
+    ])
+def test_book_details(client, mock_logged_in_user, captured_templates, \
+    book_id, title, reading, reviewed):
+    # Test cases:
+    # 1. Book is not in firestore. No user reviews or active status
+    # 2. Book is being read by user
+    # 3. Book is reviewed by user
+    session_cookie, uid = mock_logged_in_user.values()
+    
+    # Set mock request header for login required route
+    client.set_cookie('localhost', 'firebase', session_cookie)
+    
+    # Add user to mock flask session
+    with client.session_transaction() as sess:
+        sess['_user'] = {
+            'display_name': 'Test User',
+            'uid': uid
+        }
+        sess.modified = True
+    
+    rv = client.get(f'/books/{book_id}')
+    
+    assert len(captured_templates) != 0
+    template, context = captured_templates[0]
+
+    assert template.name == 'book_details.html'
+    assert context['title'] == f'bookshelf | {title}'
+    # The database is pre-populated with one user: Test User
+    # who has 2 books:
+    #   Python Testing With Python
+    #   Intorduction To Algorithms
+    assert context['book'] != None
+    # This will be used when updated
+    """
+    if reading or reviewed:
+        assert context['book_user_info'] != None
+    else:
+        assert context['book_user_info'] == None
+    
+    if reviewed:
+        assert context['book_reviews'] != None
+    else:
+        assert context['book_reviews'] == None
+    """
+    assert context['book_user_info'] != None
+    assert context['book_reviews'] != None
+
+def test_new_review_submit(client, mock_logged_in_user, mock_review_data):
+    # Confirm form data is written to database:
+    session_cookie, uid = mock_logged_in_user.values()
+    
+    # Set mock request header for login required route
+    client.set_cookie('localhost', 'firebase', session_cookie)
+    
+    # Add user to mock flask session
+    with client.session_transaction() as sess:
+        sess['_user'] = {
+            'display_name': 'Test User',
+            'uid': uid
+        }
+        sess.modified = True
+
+    book_id, form_data = mock_review_data
+
+    # Mock request context wit form data
+    rv = client.post(f'/books/review/new/{book_id}',  data=form_data)
+    
+    # Find book_review in db
+    db = firestore.client()
+    doc_ref = db.document(f'users/{uid}/books/{book_id}')
+    doc = doc_ref.get()
+    review = doc.to_dict()
+
+    for k,v in form_data.items():
+        if 'date' not in k:
+            assert review[k] == v
+
+def test_reading_request(client, mock_logged_in_user, mock_reading_data):
+
+    # Confirm form data is written to database:
+    session_cookie, uid = mock_logged_in_user.values()
+    
+    # Set mock request header for login required route
+    client.set_cookie('localhost', 'firebase', session_cookie)
+    
+    # Add user to mock flask session
+    with client.session_transaction() as sess:
+        sess['_user'] = {
+            'display_name': 'Test User',
+            'uid': uid
+        }
+        sess.modified = True
+
+    rv = client.post('/reading', json = mock_reading_data)
+
+    # Check Request Data
+    assert request.is_json
+    assert request.get_json() == mock_reading_data
+
+    # Check Response Data
+    assert rv.status_code == 200
+    assert rv.is_json
+
+    # Check db update
+    db = firestore.client()
+    doc_ref = db.document(f"users/{uid}/books/{mock_reading_data['bookId']}")
+    doc = doc_ref.get()
+    book = doc.to_dict()
+    print(book)
+    assert book['date_started'] != None
 

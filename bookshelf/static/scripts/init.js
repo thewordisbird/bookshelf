@@ -10,6 +10,16 @@ const firebaseConfig = {
     measurementId: "G-EGYBFHZGBS"
   };
 
+  const firebaseTestConfig = {
+    apiKey: "AIzaSyBBBxvB-57KF3_q0-Mnja2gDCIzONEtUZI",
+    authDomain: "bookshelf-test-20855.firebaseapp.com",
+    databaseURL: "https://bookshelf-test-20855.firebaseio.com",
+    projectId: "bookshelf-test-20855",
+    storageBucket: "bookshelf-test-20855.appspot.com",
+    messagingSenderId: "359993238780",
+    appId: "1:359993238780:web:487de89d48e40a6bd7e379"
+  };
+
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   //firebase.analytics();

@@ -85,8 +85,10 @@
                                         <i class="material-icons star-icon" >star_border</i>
                                     {% endfor %}  
                                     on {{ book.date_rated.strftime('%b %d, %Y') }}
-                                    {% if book.uid == session['_user']['uid'] %}  
-                                    <a href="#"><i class="material-icons create-icon">create</i></a>
+                                    {% if active_user %}
+                                        {% if book.uid == user.uid %}  
+                                        <a href="#"><i class="material-icons create-icon">create</i></a>
+                                        {% endif %}
                                     {% endif %}
                                 </div>    
                             </div>
