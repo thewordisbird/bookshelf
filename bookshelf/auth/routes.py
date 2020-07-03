@@ -8,7 +8,6 @@ from .forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
 from bookshelf import firebase
-
 auth = firebase.auth()
 firestore = firebase.firestore()
 
@@ -23,28 +22,37 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         email, password, display_name = form.data['email'], form.data['password'], form.data['display_name']
+        
         try:
             # Create new firebase auth user
-            auth_user = auth.create_new_user_with_email_password_display_name(email, password, display_name)
-            db_user_data = {
-                'created': datetime.now(),
-                'display_name': auth_user.display_name,
-                'email': auth_user.email,
-                'last_updated': datetime.datetime.now()
-            }
-            # Add user to firestore
-            firestore.set_document(f"users/{auth_user.uid}", db_user_data)
-            return redirect(url_for('auth.login'))      
+            auth_user = auth.create_new_user_with_email_password_display_name(email, password, display_name)  
+        except ValueError as v:
+            # Covers Passwords being too short
+            flash(v)
         except Exception as e:
             # TODO: Clean up depending on where in process error occured
-            print(f'Registration Error: {e}')
-            flash('A problem arouse while trying to register. Please try again.')
-            return redirect(url_for('auth.register'))
+            print(f'Auth Registration Error: {e.default_message}')
+            flash(e.default_message)
+            #return redirect(url_for('auth.register'))
             #return abort(401, 'Unable to register')
-    else:
-        # TODO: User Friendly flashed errors
-        for error in form.errors:
-            flash(error)
+        else:
+            try:
+                # Add successfully authorized user to firestore db
+                db_user_data = {
+                    'created': datetime.datetime.now(),
+                    'display_name': display_name,
+                    'email': email,
+                    'last_updated': datetime.datetime.now()
+                }
+                # Add user to firestore
+                firestore.set_document(f"users/{auth_user.uid}", db_user_data)
+            
+            except Exception as e:
+                # TODO: Clean up depending on where in process error occured
+                print(f'User Database Error: {e}')
+                flash('A problem arouse while trying to register. Please try again.')
+            else:
+                return redirect(url_for('auth.login')) 
     return render_template('register.html', title="bookshelf | Register", form=form)
 
 
@@ -64,9 +72,10 @@ def login():
         expires_in = datetime.timedelta(days=5)
         try:
             session_cookie = auth.create_session_cookie(id_token, expires_in)    
-        except Exception:
+        except Exception as e:
             # TODO: respond with error to display message to user
             # see create_session_cookie function for info on possible errors
+            print(f'Login Error: {e}')
             return abort(401, 'Failed to create a session cookie')
         else:
             user = firestore.get_document(f"users/{uid}")
@@ -82,6 +91,7 @@ def login():
             
             # Add user info to flask session
             session['_user'] = user
+            session['_user']['uid'] = uid
 
             resp = jsonify({'status': 'success'})
             expires = datetime.datetime.now() + expires_in
@@ -103,14 +113,12 @@ def reset_password():
         return redirect(url_for('auth.login'))
     return render_template('reset_password.html', title="bookshelf | Reset Password", form=form)
 
+
 @bp.route('/sessionLogout', methods=['POST'])
 @csrf.exempt
 def session_logout():
-    print('in session logout')
     resp = jsonify({'status': 'success'})
     resp.set_cookie('firebase', expires=0)
-    print('Session...:', session['_user'])
     if '_user' in session:
         session.pop('_user')
-    print(session.get('_user', None))
     return resp

@@ -1,5 +1,5 @@
 import pytest
-from bookshelf.google_books_api import get_book, get_books
+from bookshelf.google_books import get_book, get_books
 
 @pytest.mark.parametrize('book_id, title', 
                         [

@@ -1,30 +1,7 @@
 import firebase_admin
 from firebase_admin import auth, firestore, credentials
-
-def initialize_app(key_path=None):
-    """
-    Returns an initialized Firebase object.
-
-    For local development, requires a service account key. To download,
-    goto console.firebase.google.com > Select Project > Project Settings >
-    Service Accounts > Generate New Private Key. Save Key and set as 
-    enviornmental variable
-    """
-    try:
-        if key_path:
-            cred = credentials.Certificate(key_path)            
-        else:
-            cred = credentials.ApplicationDefault()
-    except ValueError:
-        print('App already initialized')
-    except Exception as e:
-        print(f'error: {e}')
-        raise e
-    else:
-        firebase_admin.initialize_app(cred)
-    finally:
-        return Firebase()
-
+from functools import wraps
+from flask import abort, request, redirect, url_for
 
 class Firebase:
 
@@ -77,12 +54,45 @@ class Firebase:
 
 
 class Auth:
-    def __init__(self):
-        pass
-    
-    def welcome_user(self, name):
-        print(f'hello, {name}')
-    
+
+    @classmethod
+    def login_required(cls, f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            print('in decorator')
+            session_cookie = request.cookies.get('firebase')
+            if not session_cookie:
+                # Session cookie is unavailable. Force user to login.
+                return redirect(url_for('auth.login', next=request.url))
+            try:
+                # Verify the session cookie. In this case an additional check is added to detect
+                # if the user's Firebase session was revoked, user deleted/disabled, etc.
+                auth.verify_session_cookie(session_cookie, check_revoked=True)
+                return f(*args, **kwargs)
+            except auth.InvalidSessionCookieError:
+                # Session cookie is invalid, expired or revoked. Force user to login.
+                return redirect(url_for('auth.login', next=request.url))
+            # TODO: catch other possible exceptions:
+            #   - ExpiredSessionCookieError – If the specified session cookie has expired.
+            #   - RevokedSessionCookieError – If check_revoked is True and the cookie has been revoked.
+            #   - CertificateFetchError – If an error occurs while fetching the public key certificates required to verify the session cookie.
+        return decorated_function
+
+    @classmethod
+    def restricted(**claims):
+        def decorator(f):
+            def wrapper(*args, **kwargs):
+                user_claims = auth.get_user(session['_user']['uid']).custom_claims
+                if user_claims:
+                    for claim, value in claims.items():
+                        if claim not in user_claims or user_claims[claim] != value:
+                            return abort(401, 'You are not authorized to view this page :(')
+                    return f(*args, **kwargs)
+                return abort(401, 'You are not authorized to view this page :(')
+            return wrapper
+        return decorator
+
+
     def create_session_cookie(self, id_token, expires_in):
         try:
             # Create the session cookie. This will also verify the ID token in the process.
@@ -107,7 +117,7 @@ class Auth:
             # Possible Exceptions:
             #   - ValueError - If input parameters are invlaid
             #   - FirebseError - If an error occurs while creating a session cookie
-            return e
+            raise e
 
     def get_user(self, uid):
         return auth.get_user(uid)
@@ -150,15 +160,24 @@ class Firestore:
         db = firestore.client()
         docs_ref =  db.collection(collection_path)
         docs = docs_ref.stream()
-        return list(map(document_to_dict, docs))
+        return list(map(self.doc_to_dict, docs))
 
-    def get_collection_group(self, collection, **kwargs):
+    def get_collection_group(self, collection, filters=[], order_by=(), limit=25):
         # will need to create index in firebase console
         # kwargs for order_by, limit, etc
         db = firestore.client()
-        docs_ref = db.collection_group(collection).order_by()
-        docs = docs.stream()
-        return list(map(document_to_dict, docs))
+        docs_ref = db.collection_group(collection)
+        
+        # Build Query
+        if order_by:
+            docs_ref.order_by(order_by[0], direction=order_by[1])
+        
+        for filter in filters:
+            docs_ref = docs_ref.where(filter[0], filter[1], filter[2])
+
+        docs_ref.limit(limit)
+        docs = docs_ref.stream()
+        return list(map(self.doc_to_dict, docs))
 
 
     def update_document(self, document_path, data):
@@ -179,12 +198,10 @@ class Firestore:
                 doc_ref = db.document(f"{collection_path}/item['_id']")
                 doc_ref.set(item)
 
-    @staticmethod
-    def document_to_dict(document):
+    def doc_to_dict(self, doc):
         """Convert a Firestore document to dictionary"""
-        if document.exists:
-            doc_dict = doc.to_dict()
-            return doc_dict            
+        if doc.exists:
+            return doc.to_dict()           
         return None
 
     
