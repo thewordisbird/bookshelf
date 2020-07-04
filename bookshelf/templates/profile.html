@@ -76,6 +76,7 @@
             {% endfor %}
         {% endif %}
         {% if books_read %}
+            <!-- User Read -->
             <div class="row section-header">
                 <div class="col m10 offset-m1">
                     BOOKS READ:
@@ -98,7 +99,7 @@
                                         {% endfor %}  
                                         on {{ book.date_rated.strftime('%b %d, %Y') }}
                                         {% if active_user %}                                            
-                                            <a href="#"><i class="material-icons create-icon">create</i></a>                                            
+                                            <a href="{{ url_for('books.edit_review', book_id=book.bid) }}"><i class="material-icons create-icon">create</i></a>                                            
                                         {% endif %}
                                     </div>    
                                     <div class="col m12 divider"></div>

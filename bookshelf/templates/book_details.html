@@ -52,7 +52,7 @@
                                 {% for j in range(book_user_info.rating | int, 5) %}
                                     <i class="material-icons star-icon" >star_border</i>
                                 {% endfor %}
-                                on {{ book_user_info.date_rated.strftime('%b %d, %Y') }}<a href="#"><i class="material-icons create-icon">create</i></a>                                     
+                                on {{ book_user_info.date_rated.strftime('%b %d, %Y') }}<a href="{{ url_for('books.edit_review', book_id=book_user_info.bid) }}"><i class="material-icons create-icon">create</i></a>                                     
                             </div>    
                         <div class="row">
                             <div class="col m2">
@@ -105,8 +105,8 @@
                         </div>    
                     <div class="row">
                         <div class="col m2">
-                            {% if 'photo_url' in book_user_info %}
-                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_user_info.photo_url }}"></a>
+                            {% if 'photo_url' in book_review %}
+                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_review.photo_url }}"></a>
                             {% else %}
                                 <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
                             {% endif %}

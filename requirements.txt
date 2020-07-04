@@ -1,10 +1,13 @@
 attrs==19.3.0
--e git+git@github.com:thewordisbird/bookshelf.git@85f95c709a66fce09089998ea8947f68c8638e63#egg=bookshelf
+blinker==1.4
+-e git+git@github.com:thewordisbird/bookshelf.git@374ff6aaa5280a7d54fd615aadba3131e33a04ed#egg=bookshelf
 CacheControl==0.12.6
 cachetools==4.1.0
 certifi==2020.4.5.1
 chardet==3.0.4
 click==7.1.2
+dnspython==1.16.0
+email-validator==1.1.1
 firebase-admin==4.3.0
 Flask==1.1.2
 Flask-WTF==0.14.3

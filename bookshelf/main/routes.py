@@ -78,7 +78,7 @@ def edit_profile(user_id):
                 flash(v)
             except Exception as e:
                 # TODO: Clean up depending on where in process error occured
-                print(f'Auth Registration Error: {e}')
+                print(f'Auth Profile Update Error: {e}')
                 flash(e)
             else:
                 try:
@@ -94,7 +94,7 @@ def edit_profile(user_id):
                 except Exception as e:
                     # TODO: Clean up depending on where in process error occured
                     print(f'User Database Error: {e}')
-                    flash('A problem arouse while trying to register. Please try again.')
+                    flash('A problem arouse while trying to update your profile. Please try again.')
             
             # Update session data
             for k,v in session['_user'].items():
@@ -129,7 +129,7 @@ def book_details(book_id):
 @bp.route('/books/review/new/<book_id>', methods=['GET', 'POST'])
 @auth.login_required
 def new_review(book_id):
-    rating=request.args.get('rating', 0)
+    rating=int(request.args.get('rating', 0))
     form = ReviewForm(rating=rating)
     book = google_books.get_book(book_id)
     print(form.data)
@@ -144,10 +144,14 @@ def new_review(book_id):
             'authors': book['volumeInfo']['authors'],
             'cover_url': book['volumeInfo']['imageLinks']['thumbnail'],
             'date_rated': datetime.now(),
-            'last_updated': datetime.now()
+            'last_updated': datetime.now(),
+            'rating': int(form.data['rating']),
+            'review_title': form.data['review_title'],
+            'review_content': form.data['review_content'],
+            'date_started': form.data['date_started'],
+            'date_finished': form.data['date_finished']
         }
-        data.update(form.data)
-        firestore.set_document(f"users/{data['uid']}/books/{data['bid']}", data)
+        firestore.set_document(f"users/{data['uid']}/books/{book_id}", data)
         return redirect(url_for('books.book_details', book_id=book_id))
 
     book_user_info = firestore.get_document(f"users/{session['_user']['uid']}/books/{book_id}")
@@ -156,7 +160,37 @@ def new_review(book_id):
 
     return render_template('review_form.html', \
         title=f"bookshelf | New Review | {book['volumeInfo']['title']}", \
-            form=form, book=book, rating=int(rating))
+            form=form, book=book, rating=rating)
+
+
+@bp.route('/books/review/edit/<book_id>', methods=['GET', 'POST'])
+@auth.login_required
+def edit_review(book_id):
+    book = google_books.get_book(book_id)
+    user_review = firestore.get_document(f"users/{session['_user']['uid']}/books/{book_id}")
+    review_data = {
+        'rating': user_review['rating'],
+        'review_title': user_review['review_title'],
+        'review_content': user_review['review_content'],
+        'date_started': user_review['date_started'],
+        'date_finished': user_review['date_finished']
+    }
+    form = ReviewForm(data=review_data)
+    
+    if form.validate_on_submit():
+        update_data = {
+            'last_updated': datetime.now(),
+            'rating': int(form.data['rating']),
+            'review_title': form.data['review_title'],
+            'review_content': form.data['review_content'],
+            'date_started': form.data['date_started'],
+            'date_finished': form.data['date_finished']
+        }
+        firestore.update_document(f"users/{session['_user']['uid']}/books/{book_id}", update_data)
+        return redirect(url_for('books.book_details', book_id=book_id))
+   
+    return render_template('review_form.html', form=form, book=book, \
+        rating=user_review['rating'])
 
 
 @bp.route('/reading', methods=['POST'])
