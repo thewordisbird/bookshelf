@@ -1,6 +1,6 @@
 attrs==19.3.0
 blinker==1.4
--e git+git@github.com:thewordisbird/bookshelf.git@374ff6aaa5280a7d54fd615aadba3131e33a04ed#egg=bookshelf
+-e git+https://github.com/thewordisbird/bookshelf.git@3b46484747585d6d512105930d3aa076f5ac77fe#egg=bookshelf
 CacheControl==0.12.6
 cachetools==4.1.0
 certifi==2020.4.5.1
