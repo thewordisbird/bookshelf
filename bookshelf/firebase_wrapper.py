@@ -1,3 +1,6 @@
+import os
+import json
+import requests
 import firebase_admin
 from firebase_admin import auth, firestore, credentials
 from functools import wraps
@@ -112,20 +115,31 @@ class Auth:
                 email=email,
                 password=password,
                 display_name=display_name)
-            return user
         except Exception as e:
             # Possible Exceptions:
             #   - ValueError - If input parameters are invlaid
             #   - FirebseError - If an error occurs while creating a session cookie
             raise e
+        else:
+            return user
 
     def get_user(self, uid):
         return auth.get_user(uid)
 
+    def update_user(self, uid, update_data):
+        try:
+            user = auth.update_user(uid, **update_data)
+        except Exception as e:
+            # Possible Exceptions:
+            #   - ValueError - If input parameters are invlaid
+            #   - FirebseError - If an error occurs while creating a session cookie
+            raise e
+        else:
+            return user
+
     
     # REST API FOR TEMPLATE EMAIL ACTIONS
-    @staticmethod
-    def raise_detailed_error(request_object):
+    def raise_detailed_error(self, request_object):
         try:
             request_object.raise_for_status()
         except HTTPError as e:
@@ -138,7 +152,7 @@ class Auth:
         headers = {"content-type": "application/json; charset=UTF-8"}
         data = json.dumps({"requestType": "PASSWORD_RESET", "email": email})
         request_object = requests.post(endpoint, headers=headers, data=data)
-        raise_detailed_error(request_object)
+        self.raise_detailed_error(request_object)
         return request_object.json()
 
 
@@ -147,7 +161,7 @@ class Firestore:
         db = firestore.client()
         doc_ref = db.document(document_path)
         return doc_ref.set(data)
-    
+
     def get_document(self, document_path):
         db = firestore.client()
         doc_ref = db.document(document_path)
@@ -155,7 +169,7 @@ class Firestore:
         if doc.exists:
             return doc.to_dict()
         return None
-
+    
     def get_collection(self, collection_path, limit=25):
         db = firestore.client()
         docs_ref =  db.collection(collection_path)

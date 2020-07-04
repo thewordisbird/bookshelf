@@ -7,6 +7,8 @@ from flask import Flask, flash, request, redirect, url_for, \
 from .forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
+import bookshelf.db_maint as db_maint
+
 from bookshelf import firebase
 auth = firebase.auth()
 firestore = firebase.firestore()
@@ -18,11 +20,15 @@ bp = Blueprint('auth', __name__, static_folder='static')
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    """Form to register collect user information to register user with app"""
+    """
+    Form to register user with application.
+    
+    Create an auth user in firebase auth and duplicates the neccessary
+    informaion into a user document in firestore.
+    """
     form = RegisterForm()
     if form.validate_on_submit():
-        email, password, display_name = form.data['email'], form.data['password'], form.data['display_name']
-        
+        email, password, display_name = form.data['email'], form.data['password'], form.data['display_name']        
         try:
             # Create new firebase auth user
             auth_user = auth.create_new_user_with_email_password_display_name(email, password, display_name)  
@@ -33,8 +39,6 @@ def register():
             # TODO: Clean up depending on where in process error occured
             print(f'Auth Registration Error: {e.default_message}')
             flash(e.default_message)
-            #return redirect(url_for('auth.register'))
-            #return abort(401, 'Unable to register')
         else:
             try:
                 # Add successfully authorized user to firestore db
@@ -45,8 +49,7 @@ def register():
                     'last_updated': datetime.datetime.now()
                 }
                 # Add user to firestore
-                firestore.set_document(f"users/{auth_user.uid}", db_user_data)
-            
+                firestore.set_document(f"users/{auth_user.uid}", db_user_data)            
             except Exception as e:
                 # TODO: Clean up depending on where in process error occured
                 print(f'User Database Error: {e}')
@@ -59,13 +62,18 @@ def register():
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     ### CHANGE secure to True for production ###
-    """Create session cookie from idToken passed from client
+    """
+    Create session cookie from idToken passed from client
 
     On valid creation of session cookie, check to see if the user exists
     in the db, add if needed. 
 
-    Stores User object in Flask session for quick access"""
+    Stores User object in Flask session for quick access.
+    """
     form = LoginForm(next = request.args.get('next') or '/')
+    # Clear session:
+    if '_user' in session:
+        session.pop('_user')
     if request.method == 'POST':
         request_data = request.get_json()
         id_token, uid = request_data.values()
@@ -78,21 +86,45 @@ def login():
             print(f'Login Error: {e}')
             return abort(401, 'Failed to create a session cookie')
         else:
-            user = firestore.get_document(f"users/{uid}")
-            if user is None:
-                auth_user = auth.get_user(request_data['uid'])
-                db_user_data = {
-                    'created': datetime.now(),
-                    'display_name': auth_user.display_name,
-                    'email': auth_user.email,
-                    'last_updated': datetime.now()
+            # Update db information for provider auth users
+            auth_user = auth.get_user(request_data['uid'])._data
+            
+            providers = auth_user['providerUserInfo']
+            google_provider = False
+            for provider in providers:
+                if provider['providerId'] == 'google.com':
+                    google_provider = True  
+            
+            db_user = firestore.get_document(f"users/{uid}")
+            if google_provider and db_user:
+                # Upade db with provider info
+                auth_user_data = {
+                    'display_name': auth_user['displayName'],
+                    'email': auth_user['email'],
+                    'photo_url': auth_user["photoUrl"],
                 }
-                user = firestore.set_document(f"users/{uid}", db_user_data)
+                update_data = {}
+                for k,v in auth_user_data.items():
+                    if db_user.get(k, None) != v:
+                        update_data[k] = auth_user_data[k]
+                if update_data:
+                    firestore.update_document(f"users/{uid}", update_data)
+                    db_maint.update_user_data_in_books(uid, update_data)
+            elif google_provider and not db_user:
+                auth_user_data = {
+                    'created': datetime.datetime.now(),
+                    'display_name': auth_user['displayName'],
+                    'email': auth_user['email'],
+                    'photo_url': auth_user["photoUrl"],
+                    'last_updated': datetime.datetime.now()
+                }
+                firestore.set_document(f"users/{uid}", auth_user_data)
             
             # Add user info to flask session
-            session['_user'] = user
+            session['_user'] = firestore.get_document(f"users/{uid}")
             session['_user']['uid'] = uid
 
+            # Build Response
             resp = jsonify({'status': 'success'})
             expires = datetime.datetime.now() + expires_in
             # CHANGE TO SECURE FOR PRODUCTION!!
@@ -103,13 +135,10 @@ def login():
 
 @bp.route('/resetPassword', methods=['GET', 'POST'])
 def reset_password():
+    """Sends password reset to user"""
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        # -- UPDATE --
-        # auth.send_password_reset_email(form.data['email'])
-        # -- END UPDATE
-
-        send_password_reset_email(form.data['email'])
+        auth.send_password_reset_email(form.data['email'])
         return redirect(url_for('auth.login'))
     return render_template('reset_password.html', title="bookshelf | Reset Password", form=form)
 
@@ -117,6 +146,10 @@ def reset_password():
 @bp.route('/sessionLogout', methods=['POST'])
 @csrf.exempt
 def session_logout():
+    """
+    Log user out of application by removing flask session data and 
+    firebase session cookie
+    """
     resp = jsonify({'status': 'success'})
     resp.set_cookie('firebase', expires=0)
     if '_user' in session:

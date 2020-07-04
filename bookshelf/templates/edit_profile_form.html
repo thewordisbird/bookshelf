@@ -1,109 +1,105 @@
 {% extends 'base.html' %}
 
-{% block style %}
-{% endblock %}
-
-{% block title %}{{title}}{% endblock %}
-
+{% block title %}{{ title }}{% endblock %}
 {% block content %}
 <div class="container">
+    <div class="row">
+        <div class="col m6 offset-m3 login-form">
+            <div class="card ">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="card-title col m12">
+                            Edit Profile                                         
+                        </div>    
+                        <div class="divider"></div>
+                    </div>   
+                    <div class="row">
+                        
+                        <div class="col m12">
+                            <!--START Error Messages Handling-->
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <div class="col s12 card-panel red lighten-4">
+                                        <ul>
+                                            {% for message in messages %}
+                                                <li>{{ message }}</li>
+                                            {% endfor %}
+                                            
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            {% for error in form.password.errors %}
+                                <div class="col s12 card-panel red lighten-4">
+                                    <ul>   
+                                        <li>{{ error }}</li>                                
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                            <!-- END Error Messages Handling-->
+                            <form method=post>
+                                {{ form.hidden_tag() }}
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="input-field">
+                                            {{ form.display_name() }}
+                                            {{ form.display_name.label }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if email_provider %}
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="input-field">
+                                            {{ form.email() }}
+                                            {{ form.email.label }}
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row">
-        <div class="col m10 offset-m1">
-<form method=post enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    
-    <div class="row">
-        <div class="col s12">
-            <div class="input-field">
-                {{ form.review_title() }}
-                {{ form.review_title.label }}
+                                
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="input-field">
+                                            {{ form.password() }}
+                                            {{ form.password.label }}
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="input-field">
+                                            {{ form.confirm_password() }}
+                                            {{ form.confirm_password.label }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col s12">
+                                        Your account is a provider account through google. Update information through provider.
+                                    </div>
+                                    
+                                </div>
+                                
+                                {% endif %}
+                                <div class="row">
+                                    <div class="col s12">
+                                        <button class="btn waves-effect waves-light" type="submit" name="action">Update Profile
+                                            <i class="material-icons right">send</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>               
+                        </div>
+                        
+
+                    </div>             
+                    
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col s12">
-            <div class="input-field">
-                {{ form.review_content(class="materialize-textarea") }}
-                {{ form.review_content.label }}
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col s6">
-            <div class="input-field">
-                {{ form.date_started(class="datepicker") }}
-                {{ form.date_started.label }}
-            </div>
-        </div>
-        <div class="col s6">
-            <div class="input-field">
-                {{ form.date_finished(class="datepicker") }}
-                {{ form.date_finished.label }}
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col s12">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                <i class="material-icons right">send</i>
-            </button>
-        </div>
-    </div>
-</form>  
-
-        </div>
-    </div>
-  
 </div>
-
-
-{% endblock %}
-
-{% block body_scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.datepicker');
-      var instances = M.Datepicker.init(elems, {
-          format: 'mm/dd/yyyy'});
-    });
-  </script>
-
-  <script>
-      const ratingField = document.getElementById("rating");
-      const starElements = document.getElementsByClassName("set-review");
-      const stars = new Array;
-
-      const setStars = (rating) => {
-        for (let i=0; i<rating; i++) {
-            stars[i].innerHTML= "star";
-        };
-        for (let j=rating; j<5; j++ ){
-            stars[j].innerHTML="star_border";
-        };
-      };
-
-      const removeStars = (rating) => {
-        for (let i=rating-1; i<5; i++) {
-            stars[i].innerHTML= "star_border";
-        };
-      };
-
-      for (let i=0; i<starElements.length; i++) {
-          starElements[i].addEventListener('click', function(){
-            let starValue = this.getAttribute("value");
-            if (this.innerHTML == "star_border") {
-                setStars(starValue);
-                ratingField.value = starValue ;
-            } else {
-                removeStars(starValue);
-                ratingField.value = starValue - 1;
-            };
-          }, false);
-          stars.push(starElements[i])
-      }
-  </script>
 {% endblock %}

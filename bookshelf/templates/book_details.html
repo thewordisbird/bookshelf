@@ -56,7 +56,11 @@
                             </div>    
                         <div class="row">
                             <div class="col m2">
-                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                                {% if 'photo_url' in book_user_info %}
+                                    <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_user_info.photo_url }}"></a>
+                                {% else %}
+                                    <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                                {% endif %}
                             </div>
                             <div class="col m10">
                                 
@@ -101,7 +105,11 @@
                         </div>    
                     <div class="row">
                         <div class="col m2">
-                            <a href="{{url_for('books.profile', user_id=book_review.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                            {% if 'photo_url' in book_user_info %}
+                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_user_info.photo_url }}"></a>
+                            {% else %}
+                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                            {% endif %}
                         </div>
                         <div class="col m10">                            
                             <div class="col m12 review-title">

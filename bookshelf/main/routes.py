@@ -1,11 +1,12 @@
 from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, request, \
-    jsonify, url_for, session
+    jsonify, url_for, session, flash
 
-from .forms import SearchForm, ReviewForm
+from .forms import SearchForm, ReviewForm, EditProfileForm
 
 import bookshelf.google_books as google_books
+import bookshelf.db_maint as db_maint
 
 from bookshelf import firebase
 auth = firebase.auth()
@@ -24,35 +25,85 @@ def index():
 @bp.route('/profile/<user_id>', methods=['GET'])
 @auth.login_required
 def profile(user_id):
+    """
+    Display user profile.
+
+    For active users profile the template allows editing of profile 
+    information and reviews.
+    """
     user = firestore.get_document(f"users/{user_id}")
     books = firestore.get_collection(f"users/{user_id}/books")
-    
+    books_reading = [book for book in books if 'date_rated' not in book]
+    books_read = [book for book in books if 'date_rated' in book]
+    print(user_id, session['_user']['uid'])
     if user_id == session['_user']['uid']:
         active_user = True
     else:
         active_user = False
-
-    return render_template('profile.html', title=f"bookshelf | {user['display_name']}", user=user, books=books, active_user=active_user)
+    print(active_user)
+    return render_template('profile.html', title=f"bookshelf | {user['display_name']}", \
+        user=user, books_reading=books_reading, books_read=books_read, \
+            active_user=active_user, user_id=user_id)
 
 
 @bp.route('/profile/edit/<user_id>', methods=['GET', 'POST'])
 @auth.login_required
 def edit_profile(user_id):
     # Not Yet Implemented
-    user = User(session['_user'])
-    form = EditProfile(data=user.__dict__)
-
+    auth_user = auth.get_user(user_id)
+    data = {'display_name': auth_user.display_name}
+    providers = auth_user._data['providerUserInfo']
+    email_provider = False
+    for provider in providers:
+        if provider['providerId'] == 'password':
+            email_provider = True
+            data['email'] = auth_user.email    
+    form = EditProfileForm(data=data)
     if form.validate_on_submit():
+        print(form.data)
         update_data = {}
-        for k,v in user.__dict__.items():
-            if k in form.data:
-                if form.data[k] != v:
-                    update_data[k] = form.data[k]
-        user.update_db(update_data)
+        if form.data['email'] != '': 
+            update_data['email'] = form.data['email']
+        if form.data['password'] != '': 
+            update_data['password'] = form.data['password']
+        if form.data['display_name'] != '': 
+            update_data['display_name'] = form.data['display_name'] 
+        print('UPDATE DATA:', update_data)   
+        if email_provider:              
+            try:
+                # Create new firebase auth user
+                auth_user = auth.update_user(user_id, update_data)
+            except ValueError as v:
+                # Covers Passwords being too short
+                flash(v)
+            except Exception as e:
+                # TODO: Clean up depending on where in process error occured
+                print(f'Auth Registration Error: {e}')
+                flash(e)
+            else:
+                try:
+                    # Add successfully authorized user to firestore db
+                    db_user_data = update_data
+                    if 'password' in db_user_data:
+                        del db_user_data['password']
+                    db_user_data['last_updated'] = datetime.now()
+                    # Add user to firestore
+                    firestore.update_document(f"users/{auth_user.uid}", db_user_data)
+                    if 'display_name' in update_data: 
+                        db_maint.update_user_data_in_books(auth_user.uid, db_user_data)           
+                except Exception as e:
+                    # TODO: Clean up depending on where in process error occured
+                    print(f'User Database Error: {e}')
+                    flash('A problem arouse while trying to register. Please try again.')
+            
+            # Update session data
+            for k,v in session['_user'].items():
+                if k in update_data and v != update_data[k]:
+                    session['_user'][k] = update_data[k]
 
-        session['_user'] = user.__dict__
-        return redirect(url_for('profile', user_id=user.uid))
-    return render_template('edit_profile_form', form=form)
+        return redirect(url_for('books.profile', user_id=user_id))
+    return render_template('edit_profile_form.html', form=form, \
+        email_provider=email_provider)
 
 
 @bp.route('/books/search', methods=['GET'])
@@ -81,9 +132,9 @@ def new_review(book_id):
     rating=request.args.get('rating', 0)
     form = ReviewForm(rating=rating)
     book = google_books.get_book(book_id)
-    #print(form.data)
-    #print(form.validate())
-    #print(form.errors)
+    print(form.data)
+    print(form.validate())
+    print(form.errors)
     if form.validate_on_submit():
         data = {
             'uid': session['_user']['uid'],
@@ -96,13 +147,12 @@ def new_review(book_id):
             'last_updated': datetime.now()
         }
         data.update(form.data)
-        book = firestore.set_document(f"users/{data['uid']}/books/{data['bid']}", data)
+        firestore.set_document(f"users/{data['uid']}/books/{data['bid']}", data)
         return redirect(url_for('books.book_details', book_id=book_id))
 
-    book_user_info = Book.build_from_db(session['_user']['uid'], book_id)
-
-    if 'date_started' in book_user_info.__dict__:
-        form.date_started.data = book_user_info.date_started
+    book_user_info = firestore.get_document(f"users/{session['_user']['uid']}/books/{book_id}")
+    if book_user_info and 'date_started' in book_user_info:
+        form.date_started.data = book_user_info['date_started']
 
     return render_template('review_form.html', \
         title=f"bookshelf | New Review | {book['volumeInfo']['title']}", \

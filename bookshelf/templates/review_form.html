@@ -64,12 +64,18 @@
                                 <div class="input-field">
                                     {{ form.date_started(class="datepicker") }}
                                     {{ form.date_started.label }}
+                                    {% for error in form.date_started.errors %}
+                                        <span class="helper-text field-error" data-error="wrong">{{ error }}</span>
+                                    {% endfor %}                                    
                                 </div>
                             </div>
                             <div class="col s6">
                                 <div class="input-field">
                                     {{ form.date_finished(class="datepicker") }}
                                     {{ form.date_finished.label }}
+                                    {% for error in form.date_finished.errors %}
+                                        <span class="helper-text field-error" data-error="wrong">{{ error }}</span>
+                                    {% endfor %}   
                                 </div>
                             </div>
                         </div>

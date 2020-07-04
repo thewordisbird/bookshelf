@@ -1,7 +1,7 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateTimeField, HiddenField, DateField, FileField
-from wtforms.validators import DataRequired, ValidationError, optional  
+from wtforms import StringField, TextAreaField, DateTimeField, HiddenField, DateField, FileField, PasswordField
+from wtforms.validators import DataRequired, ValidationError, optional, Email, EqualTo  
 
 class NullableDateTimeField(DateTimeField):
     """Modify DateField to allow for Null values"""
@@ -30,33 +30,15 @@ class ReviewForm(FlaskForm):
     def validate_date_finished(self, date_finished):
         if self.date_started.data and date_finished.data:
             if self.date_started.data > date_finished.data:
-                print("Date started must be lessthan or equal to date finished")
-                raise ValidationError("Date started must be lessthan or equal to date finished.")
+                print("Date finished must be greater than or equal to date started")
+                raise ValidationError("Date finished must be greater than or equal to date started.")
         
         elif self.date_started.data or date_finished.data:
             print('missing date')
             raise ValidationError("If setting read dates, both dates are required.")
 
 class EditProfileForm(FlaskForm):
-    valid_db_attrs = {
-        'uid',
-        'display_name',
-        'email', 
-        'created', 
-        'last_updated'
-    }
-    valid_auth_attrs = {
-        'uid',
-        'display_name',
-        'email',
-        'email_verified',
-        'phone_number',
-        'photo_url',
-        'password',
-        'diabled',
-        'app'
-    }
-
-    display_name = StringField('Display Name')
-    phone_number = StringField('Phone Number')
-    photo_url = FileField('Profile Photo')
+    display_name = StringField("Name", validators=[])
+    email = StringField("Email", validators=[Email(message="Invalid Email Address.")])
+    password = PasswordField("Password", validators=[EqualTo('confirm_password', message='Passwords must match.')])
+    confirm_password = PasswordField("Confirm Password", validators=[])
