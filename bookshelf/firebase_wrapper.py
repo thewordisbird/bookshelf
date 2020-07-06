@@ -25,7 +25,7 @@ class Firebase:
         enviornmental variable
         """
         self.flask_app = flask_app
-        cred_path = self.flask_app.config.get('GOOGLE_APPLICATION_CREDENTIALS')
+        cred_path = self.flask_app.config.get('GOOGLE_APPLICATION_CREDENTIALS', None)
 
         try:
             if cred_path:
