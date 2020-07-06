@@ -1,12 +1,14 @@
 import os
+from bookshelf import secrets_wrapper
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    PROJECT_ID = os.environ.get("PROJECT_ID")
+    SECRET_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, "SECRET_KEY")
     DEBUG=False
     TESTING=False
 
 class ProcudtionConfig(Config):
-    pass
+    WEB_API_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, "WEB_API_KEY")
 
 class DevelopmentConfig(Config):
     DEBUG=True
