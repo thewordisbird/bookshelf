@@ -1,7 +1,7 @@
 from flask import Flask
 from config import DevelopmentConfig, TestingConfig, ProcudtionConfig
-import firebase_admin
-from firebase_admin import credentials
+#import firebase_admin
+#from firebase_admin import credentials
 #from dotenv import load_dotenv, find_dotenv
 #load_dotenv(find_dotenv())
 from bookshelf.firebase_wrapper import Firebase
