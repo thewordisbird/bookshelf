@@ -1,6 +1,6 @@
 attrs==19.3.0
 blinker==1.4
--e git+git@github.com:thewordisbird/bookshelf.git@8381685e36ff885859b4f9e4dd492505f42d8502#egg=bookshelf
+-e git+https://github.com/thewordisbird/bookshelf.git#egg=bookshelf
 CacheControl==0.12.6
 cachetools==4.1.0
 certifi==2020.4.5.1
@@ -11,7 +11,6 @@ email-validator==1.1.1
 firebase-admin==4.3.0
 Flask==1.1.2
 Flask-WTF==0.14.3
-flaskr==0.0.1
 google-api-core==1.19.1
 google-api-python-client==1.9.1
 google-auth==1.16.1
