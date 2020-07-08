@@ -1,23 +1,28 @@
 import os
 from bookshelf import secrets_wrapper
-
+PROJECT_ID = "bookshelf-89de1"
+TESTING_PROJECT_ID = "bookshelf-test-20855"
 class Config:
-    PROJECT_ID = os.environ.get("PROJECT_ID")
-    SECRET_KEY = os.environ.get("SECRET_KEY")
     DEBUG=False
     TESTING=False
 
 class ProcudtionConfig(Config):
-    WEB_API_KEY = os.environ.get('WEB_API_KEY')
+    SESSION_COOKIE_SECURE = True
+    SECRET_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'SECRET_KEY')
+    GOOGLE_APPLICATION_CREDENTIAL = secrets_wrapper.access_secret_version(PROJECT_ID, 'GOOGLE_APPLICATION_CREDENTIAL')
+    WEB_API_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'WEB_API_KEY')
 
 class DevelopmentConfig(Config):
     DEBUG=True
-    GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-    WEB_API_KEY = os.environ.get('WEB_API_KEY')
+    SECRET_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'SECRET_KEY')
+    GOOGLE_APPLICATION_CREDENTIAL = secrets_wrapper.access_secret_version(PROJECT_ID, 'GOOGLE_APPLICATION_CREDENTIAL')
+    WEB_API_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'WEB_API_KEY')
 
 class TestingConfig(Config):
     TESTING=True
-    GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_TEST_CREDENTIALS')
-    WEB_API_KEY = os.environ.get('WEB_API_TEST_KEY')
     WTF_CSRF_ENABLED = False
-    LOGIN_DISABLED = True
+
+    #SECRET_KEY = secrets_wrapper.access_secret_version(TESTING_PROJECT_ID, 'SECRET_KEY')
+    #GOOGLE_APPLICATION_CREDENTIAL = secrets_wrapper.access_secret_version(TESTING_PROJECT_ID, 'GOOGLE_APPLICATION_CREDENTIAL')
+    #WEB_API_KEY = secrets_wrapper.access_secret_version(TESTING_PROJECT_ID, 'WEB_API_KEY')
+    

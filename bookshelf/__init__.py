@@ -9,14 +9,20 @@ from bookshelf.firebase_wrapper import Firebase
 # Global Objects
 firebase = Firebase()
 
-def create_app(config=DevelopmentConfig):
+CONFIGS = {
+    'production': ProcudtionConfig, 
+    'development': DevelopmentConfig, 
+    'testing': TestingConfig
+    }
+
+def create_app(config='production'):
     """Create an application instance with the desired configuration.
 
     Also where extentions and blueprints are registered with the instance
     """
     app = Flask(__name__)
-    app.config.from_object(config)
-
+    app.config.from_object(CONFIGS[config])
+    
     # Initialize firebase    
     firebase.init_app(app)
 

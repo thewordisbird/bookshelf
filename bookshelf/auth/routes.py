@@ -128,7 +128,7 @@ def login():
             resp = jsonify({'status': 'success'})
             expires = datetime.datetime.now() + expires_in
             # CHANGE TO SECURE FOR PRODUCTION!!
-            resp.set_cookie('firebase', session_cookie, expires=expires, httponly=True, secure=False)
+            resp.set_cookie('firebase', session_cookie, expires=expires, httponly=True, secure=True)
             return resp
     return render_template('login.html', title="bookshelf | Login", form=form, next=next)
 
