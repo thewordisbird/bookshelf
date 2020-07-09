@@ -11,7 +11,8 @@ def get_book(book_id):
     endpoint = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
     headers = {"content-type": "application/json; charset=UTF-8"}
     resp = requests.get(endpoint, headers=headers)
-    return resp.json()
+    book = resp.json()
+    return thumbnail_to_https(book)
 
 def get_books(query, max_results=25):
     """
