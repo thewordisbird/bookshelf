@@ -108,7 +108,8 @@ def edit_profile(user_id):
 
 @bp.route('/books/search', methods=['GET'])
 def search():
-    books= google_books.get_books(request.args.get('q'))['items']
+    books= google_books.get_books(request.args.get('q'))
+    print('BOOKS:', books)
     return render_template('search.html', title='bookshelf | Search', books=books)
 
 

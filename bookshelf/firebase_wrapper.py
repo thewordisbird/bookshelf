@@ -215,7 +215,9 @@ class Firestore:
     def doc_to_dict(self, doc):
         """Convert a Firestore document to dictionary"""
         if doc.exists:
-            return doc.to_dict()           
+            d = doc.to_dict()
+            d['doc_id'] = doc.id
+            return d         
         return None
 
     

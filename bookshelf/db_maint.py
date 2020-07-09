@@ -17,5 +17,16 @@ def update_user_data_in_books(uid, update_data):
             #print(f"Updating {book['title']} with {update_data}")
             firestore.update_document(f"users/{uid}/books/{book['bid']}", update_data)
 
-
+def thumbnail_url_to_https():
+    # NEED DOCUMENT PATH TO UPDATE
+    users = firestore.get_collection('users')
+    for user in users:
+        print(f"Updating https for {user['display_name']}")
+        books = firestore.get_collection(f"users/{user['doc_id']}/books")    
+        for book in books:
+            print(f"\t{book['title']}")
+            if 'cover_url' in book:
+                if book['cover_url'][4] != 's':
+                    https_url = book['cover_url'][:4] +'s' + book['cover_url'][4:] 
+                    firestore.update_document(f"users/{user['doc_id']}/books/{book['bid']}", {'cover_url': https_url})
 
