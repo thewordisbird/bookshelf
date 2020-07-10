@@ -185,6 +185,7 @@ def edit_review(book_id):
 
 
 @bp.route('/reading', methods=['POST'])
+@auth.login_required
 def reading():
     request_data = request.get_json()
     book_id = request_data['bookId']
