@@ -16,7 +16,6 @@ bp = Blueprint('books', __name__)
 
 @bp.route('/', methods=['GET'])
 @bp.route('/index', methods=['GET'])
-@auth.login_required
 def index():
     books = firestore.get_collection_group("books", order_by=("last_updated", "DESCENDING"))
     return render_template('index.html', title="bookshelf | home", books=books)
@@ -109,7 +108,6 @@ def search():
 
 
 @bp.route('/books/<book_id>', methods=['GET'])
-@auth.login_required
 def book_details(book_id):
     book = google_books.get_book(book_id)
     book_user_info = None
