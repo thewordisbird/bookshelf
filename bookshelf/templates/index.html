@@ -2,14 +2,14 @@
 {% block title %}{{title}}{% endblock %}
 {% block content %}
     <div class="container">
-    {% for book in books %}        
+        {% for book in books %}        
             {% if 'date_rated' in book %}
                 <div class="row">
-                    <div class="col m10 offset-m1">
+                    <div class="col s12 m10 offset-m1">
                     <div class="card">
                         <div class="card-content">
                             <div class="row">
-                                <div class="card-title col m12">
+                                <div class="card-title col s12">
                                     <a href="{{url_for('books.profile', user_id=book.uid)}}">{{book.display_name}}</a> rated it                                    
                                     {% for i in range(book.rating | int) %}
                                         <i class="material-icons star-icon" >star</i>
@@ -21,23 +21,23 @@
                                 </div>    
                             </div>
                             <div class="row">
-                                <div class="col m2">
+                                <div class="col s12 m2 cover-img-wrapper center">
                                     {% if 'cover_url' in book %}
-                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img src={{ book.cover_url }} ></a>
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src={{ book.cover_url }} ></a>
                                     {% else %}
-                                        <img src="https://via.placeholder.com/150">
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="https://via.placeholder.com/150"></a>
                                     {% endif %}
                                     
                                 </div>
-                                <div class="col m10">
+                                <div class="col s12 m10">
                                     <div class="col m12">
                                         <span class="book-title"><h5><a href="{{ url_for('books.book_details', book_id=book.bid) }}">{{ book.title }}</a></h5></span>by {{ ', '.join(book.authors) }}
                                     </div>
-                                    <div class="col m12 divider"></div>
-                                    <div class="col m12 review-title">
+                                    <div class="col s12 divider"></div>
+                                    <div class="col s12 review-title">
                                         {{ book.review_title }}
                                     </div>
-                                    <div class="col m12 review-content">
+                                    <div class="col s12 review-content">
                                         {{ book.review_content }}
                                     </div>           
                                 </div> 
@@ -47,24 +47,24 @@
                 </div>
             {% else %}
                 <div class="row">
-                    <div class="col m10 offset-m1">
+                    <div class="col s12 m10 offset-m1">
                     <div class="card">
                         <div class="card-content">
                             <div class="row">
-                                <div class="card-title col m12">
+                                <div class="card-title col s12">
                                     <a href="{{url_for('books.profile', user_id=book.uid)}}">{{book.display_name}}</a> is currently reading:
                                 </div>    
                             </div>
                             <div class="row">
-                                <div class="col m2">
+                                <div class="col s12 m2 cover-img-wrapper center">
                                     {% if 'cover_url' in book %}
-                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img src={{ book.cover_url }} ></a>
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src={{ book.cover_url }} ></a>
                                     {% else %}
-                                        <img src="https://via.placeholder.com/150">
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="https://via.placeholder.com/150"></a>
                                     {% endif %}
                                 </div>
-                                <div class="col m10">
-                                    <div class="col m12">
+                                <div class="col s12 m10">
+                                    <div class="col s12">
                                         <span class="book-title"><h5><a href="{{ url_for('books.book_details', book_id=book.bid) }}">{{ book.title }}</a></h5></span>by {{ ', '.join(book.authors) }}
                                     </div>       
                                 </div> 

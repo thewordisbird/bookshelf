@@ -34,7 +34,7 @@ def get_books(query, max_results=25):
 def thumbnail_to_https(book):
     if 'imageLinks' in book['volumeInfo'] and 'thumbnail' in book['volumeInfo']['imageLinks']:
         thumbnail_url = book['volumeInfo']['imageLinks']['thumbnail']
-        print(thumbnail_url)
+        #print(thumbnail_url)
         if thumbnail_url[4] != 's':
             book['volumeInfo']['imageLinks']['thumbnail'] = \
                 thumbnail_url[:4] + 's' + thumbnail_url[4:]

@@ -1,47 +1,62 @@
 {% if session['_user'] %}
-<ul id="dropdown1" class="dropdown-content">
-    <li><a href="{{ url_for('books.profile', user_id=session['_user']['uid']) }}">Profile</a></li>
-    <li><button id="btnLogout" class="btn-logout">Logout</button></li>
-</ul>
-{% endif %}
-<nav class="white" role="navigation">
-    <div class="nav-wrapper container">
-        <div class="row">
-            <div class="col m3">
-                <a href="{{ url_for('books.index') }}" class="brand-logo"> <i class="material-icons">import_contacts</i>bookshelf</a>
-            </div>
-            <div class="col m6">
-                
-                     <div class="nav-search grey lighten-4">
-                         <form action="{{ url_for('books.search') }}" method="get">
+    <!-- Navbar dropdown list -->
+    <ul id="dropdown1" class="dropdown-content">
+        <li><a href="{{ url_for('books.profile', user_id=session['_user']['uid']) }}">Profile</a></li>
+        <li><button id="btnLogout" class="btn-logout">Logout</button></li>
+    </ul>
+    <!-- Sidenav for nav collapse -->
+    <ul class="sidenav" id="mobile-demo">
+        <form action="{{ url_for('books.search') }}" method="get">
+            <div class="input-field grey lighten-4">
+                <input type="search" name="q" placeholder="Title, Author, ISBN, etc..." required>
+                <label class="label-icon" for="search"><i class="material-icons search-icon">search</i></label>
+            </div>         
+        </form>
+        {% if session['_user'] %}
+            <li><a href="{{ url_for('books.index') }}">Home</a></li>   
+            <li><a href="{{ url_for('books.profile', user_id=session['_user']['uid']) }}">Profile</a></li>
+            <li><button id="btnLogout" class="btn-logout">Logout</button></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+    <nav class="white" role="navigation">
+        <div class="nav-wrapper container">
+            <div class="row">
+                <div class="col s12 m3 ">
+                    <a href="{{ url_for('books.index') }}" class="brand-logo"> <i class="material-icons">import_contacts</i>bookshelf</a>
+                    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                </div>
+                <div class="col s12 m6 ">                
+                    <div class="nav-search grey lighten-4 hide-on-med-and-down">
+                        <form action="{{ url_for('books.search') }}" method="get">
                             <div class="col s1" >
-                               <button class="nav-search-submit" type="submit"><i class="search-icon material-icons prefix">search</i></button>
+                                <button class="nav-search-submit" type="submit"><i class="search-icon material-icons prefix">search</i></button>
                             </div>
                             <div class="col s11">
-                                <input type="text" name="q" placeholder="Title, Author, ISBN, etc..." id="" class="no-focus" required >
+                                <input type="search" name="q" placeholder="Title, Author, ISBN, etc..." id="" class="no-focus" required >
                             </div>
-                         </form>
-                        
+                        </form>
                     </div>
-            </div>
-            <div class="col m3">
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    {% if session['_user'] %}
-                    <li><a href="{{ url_for('books.index') }}">Home</a></li>                    
-                    <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{ session['_user']['display_name'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
-                    {% else %}
-                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                    {% endif %}
-                </ul>
+                </div>
+                <div class="col s12 m3 ">
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        {% if session['_user'] %}
+                        <li><a href="{{ url_for('books.index') }}">Home</a></li>                    
+                        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{ session['_user']['display_name'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 {% if session['_user'] %}
-{% block body_scripts %}
-
-<script src="{{ url_for('static', filename='scripts/logout.js') }}"></script>
-
-{% endblock %}
+    {% block body_scripts %}
+        <script src="{{ url_for('static', filename='scripts/logout.js') }}"></script>
+    {% endblock %}
 {% endif %}

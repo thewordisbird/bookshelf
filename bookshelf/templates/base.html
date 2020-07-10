@@ -12,8 +12,6 @@
             <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
             <!--Font Awesome-->
             <script src="https://kit.fontawesome.com/1dadc7aeb9.js" crossorigin="anonymous"></script>
-            
-
             {% block head_scripts %}{% endblock %}
             {% block style %}{% endblock %}
             <title>{% block title %}{% endblock %}</title>
@@ -27,10 +25,14 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
             
             <script>
-                
+                // Initialize materialize functions
                 $( document ).ready(function() {
+                    // Navbar sub items
                     $(".dropdown-trigger").dropdown();
+                    // Navbar sidenav
+                    $(".sidenav").sidenav();
                 });
+
             </script>
             {% block body_scripts %}{% endblock %}
             {% block mobile %}{% endblock %}

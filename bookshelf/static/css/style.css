@@ -105,8 +105,7 @@ body {
 }
 
 .user-img {
-    height: 150px;
-    width: 150px;
+    width: 95%;
     border-radius: 50%;
     margin-top: 0;
 }
@@ -160,10 +159,59 @@ nav ul a{
     color: #444;
 }
 
+nav a{
+    color: #444;
+}
+
+.sidenav a{
+    color: #444;
+}
+
+
+.sidenav form {
+    width: 100%;
+}
+
+.sidenav .input-field{
+    margin: 0;
+    height: 100%;
+}
+
+.sidenav .input-field input[type=search]{
+    padding-left: 3.5rem;
+    width: calc(100% - 3.5rem);
+}
+
+.sidenav .input-field input[type=search]+label{
+    left: 1rem;
+}
+
+.sidenav .search-icon {
+    position: relative;
+    bottom: -.75rem;
+    color: #444;
+
+}
+
+.sidenav
 .dropdown-content li a{
     color: #444;
 }
 
+.sidenav .btn-logout{
+    display: block;
+    padding: 0 32px;
+    border: none;
+    background-color: transparent;
+    height: 48px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 48px;
+    width:100%;
+    text-align: left;
+    
+}
 
 .nav-search {
     width:100%;
@@ -183,7 +231,7 @@ nav ul a{
     color: #444;
 }
 
-.nav-search input[type=text]{
+.nav-search input[type=search]{
     border-bottom: none;
     position: relative;
     bottom: .5rem;
@@ -191,7 +239,7 @@ nav ul a{
     font-weight: 300;
 }
 
-.nav-search input[type=text]:focus {
+.nav-search input[type=search]:focus {
     border-bottom: none !important;
     box-shadow: none !important;
   }
@@ -202,7 +250,8 @@ form *{
 
 form button {
     border-color: white;
-    border-width: 1px;
+    border-width: 0;
+    border-right: 0
     border-left: 0;
     border-top: 0;
     border-bottom: 0;
@@ -227,6 +276,12 @@ form button:focus{
 .dropdown-content li{
     text-align: center;
 }
+
+.dropdown-content li a{
+    text-align: center;
+    color: #444;
+}
+
 
 .login-form{
     padding-top: 25rem;
@@ -267,4 +322,55 @@ form button:focus{
     display: inline-block;
     text-align: center;
     
+}
+
+.card .cover-img{
+    margin-top: 0;
+    width: 95%;
+
+}
+
+.card-rating-align{
+    text-align: right;
+}
+
+.card-title .cover-img-review{
+    width: 50px;
+    height: 75px;
+}
+
+/* Mobile Settings */
+@media screen and (max-width: 600px) {
+    .card .cover-img{
+        margin: auto;
+        max-width: 90%;
+    }
+
+    .card .cover-img img{
+        margin: auto;       
+    }
+
+    .card-rating-align{
+        text-align: center;
+        margin-top: .25rem;
+    }
+
+    .card .btn {
+        width: 100%;
+    }
+
+    .book-info .cover-img{
+        margin: auto;
+        max-width: 90%;
+    }
+
+    .book-info img{
+        width: 95%;
+    }
+
+    .card-title .cover-img-review{
+        width: 100%;
+        height: auto;
+    }
+
 }

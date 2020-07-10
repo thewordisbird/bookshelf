@@ -35,12 +35,10 @@ def profile(user_id):
     books = firestore.get_collection(f"users/{user_id}/books")
     books_reading = [book for book in books if 'date_rated' not in book]
     books_read = [book for book in books if 'date_rated' in book]
-    print(user_id, session['_user']['uid'])
     if user_id == session['_user']['uid']:
         active_user = True
     else:
         active_user = False
-    print(active_user)
     return render_template('profile.html', title=f"bookshelf | {user['display_name']}", \
         user=user, books_reading=books_reading, books_read=books_read, \
             active_user=active_user, user_id=user_id)
@@ -60,7 +58,6 @@ def edit_profile(user_id):
             data['email'] = auth_user.email    
     form = EditProfileForm(data=data)
     if form.validate_on_submit():
-        print(form.data)
         update_data = {}
         if form.data['email'] != '': 
             update_data['email'] = form.data['email']
@@ -68,7 +65,6 @@ def edit_profile(user_id):
             update_data['password'] = form.data['password']
         if form.data['display_name'] != '': 
             update_data['display_name'] = form.data['display_name'] 
-        print('UPDATE DATA:', update_data)   
         if email_provider:              
             try:
                 # Create new firebase auth user
@@ -109,7 +105,6 @@ def edit_profile(user_id):
 @bp.route('/books/search', methods=['GET'])
 def search():
     books= google_books.get_books(request.args.get('q'))
-    print('BOOKS:', books)
     return render_template('search.html', title='bookshelf | Search', books=books)
 
 
@@ -133,9 +128,6 @@ def new_review(book_id):
     rating=int(request.args.get('rating', 0))
     form = ReviewForm(rating=rating)
     book = google_books.get_book(book_id)
-    print(form.data)
-    print(form.validate())
-    print(form.errors)
     if form.validate_on_submit():
         data = {
             'uid': session['_user']['uid'],

@@ -1,131 +1,130 @@
 {% extends 'base.html' %}
 {% block title %}{{title}}{% endblock %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col m10 offset-m1">
-        <div class="card">
-            <div class="card-content">
-                <div class="row">
-                    <div class="card-title col m12">
-                        <div class="col m1">
-                            <img class="cover-img-review" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}" width="50" height="75">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m10 offset-m1">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="card-title col s12">
+                                <div class="col s12 m1">
+                                    <img class="cover-img-review" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
+                                </div>
+                                <div class="col s12 m11">
+                                    <span class="book-title"><h5>{{ book['volumeInfo']['title'] }}</a></h5></span>
+                                    by {{ ', '.join(book['volumeInfo']['authors']) }}        
+                                </div>                                                 
+                            </div>    
+                            <div class="divider"></div>
                         </div>
-                        <div class="col m11">
-                            <span class="book-title"><h5>{{ book['volumeInfo']['title'] }}</a></h5></span>
-                                            by {{ ', '.join(book['volumeInfo']['authors']) }}        
-                        </div>                                                 
-                    </div>    
-                    <div class="divider"></div>
+                        <div class="row">
+                            <div class="s12">
+                                <form method=post enctype="multipart/form-data">
+                                    {{ form.hidden_tag() }}
+                                    <span class="rating-label"> My Rating:</span> 
+                                    <span class="star-rated">
+                                        {% if rating %}
+                                            {% for i in range(rating) %}
+                                                <i value="{{ i+1 }}" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star</i>
+                                            {% endfor %}
+                                            {% for j in range(rating, 5) %}
+                                                <i value="{{ j+1 }}" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
+                                            {% endfor %}
+                                        {% else %}
+                                            <i value="1" class="material-icons star-icon set-review" >star_border</i>
+                                            <i value="2" class="material-icons star-icon set-review" >star_border</i>
+                                            <i value="3" class="material-icons star-icon set-review" >star_border</i>
+                                            <i value="4" class="material-icons star-icon set-review" >star_border</i>
+                                            <i value="5" class="material-icons star-icon set-review" >star_border</i>
+                                        {% endif %}
+                                    </span>
+                                    <div class="row">
+                                        <div class="col s12">
+                                            <div class="input-field">
+                                                {{ form.review_title() }}
+                                                {{ form.review_title.label }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s12">
+                                            <div class="input-field">
+                                                {{ form.review_content(class="materialize-textarea") }}
+                                                {{ form.review_content.label }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s6">
+                                            <div class="input-field">
+                                                {{ form.date_started(class="datepicker") }}
+                                                {{ form.date_started.label }}
+                                                {% for error in form.date_started.errors %}
+                                                    <span class="helper-text field-error" data-error="wrong">{{ error }}</span>
+                                                {% endfor %}                                    
+                                            </div>
+                                        </div>
+                                        <div class="col s6">
+                                            <div class="input-field">
+                                                {{ form.date_finished(class="datepicker") }}
+                                                {{ form.date_finished.label }}
+                                                {% for error in form.date_finished.errors %}
+                                                    <span class="helper-text field-error" data-error="wrong">{{ error }}</span>
+                                                {% endfor %}   
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s12 center-align">
+                                            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                                                <i class="material-icons right">send</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>                    
+                    </div>
                 </div>
-                <div class="row">
-
-                    <form method=post enctype="multipart/form-data">
-                        {{ form.hidden_tag() }}
-                        
-                    
-                         <span class="rating-label"> My Rating:</span> <span class="star-rated">
-                             {% if rating %}
-                                {% for i in range(rating) %}
-                                    <i value="{{ i+1 }}" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star</i>
-                                {% endfor %}
-                                {% for j in range(rating, 5) %}
-                                    <i value="{{ j+1 }}" class="material-icons star-icon small teal-text text-lighten-2 set-review" >star_border</i>
-                                {% endfor %}
-                            {% else %}
-                                <i value="1" class="material-icons star-icon set-review" >star_border</i>
-                                <i  value="2" class="material-icons star-icon set-review" >star_border</i>
-                                <i  value="3" class="material-icons star-icon set-review" >star_border</i>
-                                <i  value="4" class="material-icons star-icon set-review" >star_border</i>
-                                <i  value="5" class="material-icons star-icon set-review" >star_border</i>
-                             {% endif %}
-                        </span>
-                        
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="input-field">
-                                    {{ form.review_title() }}
-                                    {{ form.review_title.label }}
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="input-field">
-                                    {{ form.review_content(class="materialize-textarea") }}
-                                    {{ form.review_content.label }}
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="row">
-                            <div class="col s6">
-                                <div class="input-field">
-                                    {{ form.date_started(class="datepicker") }}
-                                    {{ form.date_started.label }}
-                                    {% for error in form.date_started.errors %}
-                                        <span class="helper-text field-error" data-error="wrong">{{ error }}</span>
-                                    {% endfor %}                                    
-                                </div>
-                            </div>
-                            <div class="col s6">
-                                <div class="input-field">
-                                    {{ form.date_finished(class="datepicker") }}
-                                    {{ form.date_finished.label }}
-                                    {% for error in form.date_finished.errors %}
-                                        <span class="helper-text field-error" data-error="wrong">{{ error }}</span>
-                                    {% endfor %}   
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="row">
-                            <div class="col s12 center-align">
-                                <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                                    <i class="material-icons right">send</i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>  
-
-                </div>                    
             </div>
         </div>
     </div>
 {% endblock %}
 
 {% block body_scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.datepicker');
-      var instances = M.Datepicker.init(elems, {
-          format: 'mm/dd/yyyy'});
-    });
-  </script>
+    <script>
+        // Materialize Datepicker
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(elems, {
+                format: 'mm/dd/yyyy'});
+        });
+    </script>
 
-  <script>
-      const ratingField = document.getElementById("rating");
-      const starElements = document.getElementsByClassName("set-review");
-      const stars = new Array;
+    <script>
+        // Star Rating
+        const ratingField = document.getElementById("rating");
+        const starElements = document.getElementsByClassName("set-review");
+        const stars = new Array;
 
-      const setStars = (rating) => {
+        const setStars = (rating) => {
         for (let i=0; i<rating; i++) {
             stars[i].innerHTML= "star";
         };
         for (let j=rating; j<5; j++ ){
             stars[j].innerHTML="star_border";
         };
-      };
+        };
 
-      const removeStars = (rating) => {
+        const removeStars = (rating) => {
         for (let i=rating-1; i<5; i++) {
             stars[i].innerHTML= "star_border";
         };
-      };
+        };
 
-      for (let i=0; i<starElements.length; i++) {
-          starElements[i].addEventListener('click', function(){
+        for (let i=0; i<starElements.length; i++) {
+            starElements[i].addEventListener('click', function(){
             let starValue = this.getAttribute("value");
             if (this.innerHTML == "star_border") {
                 setStars(starValue);
@@ -134,8 +133,8 @@
                 removeStars(starValue);
                 ratingField.value = starValue - 1;
             };
-          }, false);
-          stars.push(starElements[i])
-      }
-  </script>
+            }, false);
+            stars.push(starElements[i])
+        }
+    </script>
 {% endblock %}

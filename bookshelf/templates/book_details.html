@@ -1,198 +1,199 @@
 {% extends 'base.html' %}
 {% block title %}{{title}}{% endblock %}
 {% block content %}
-<div class="container">
-    <div class="row ">
-        <div class="col m10 offset-m1 book-info">
-            <div class="col m2 center-align">
-                {% if 'imageLinks' in book.volumeInfo %}
-                <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="{{ book.volumeInfo.imageLinks.thumbnail }}"></a>
-                {% else %}
-                <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="https://via.placeholder.com/150"></a>
-                {% endif %}    
-                <div class="user-status">
-                    {% if not book_user_info.date_rated %}
-                        {% if not book_user_info.date_finished %}                    
-                            <a href="{{ url_for('books.new_review' , book_id=book.id, rating=1) }}"><i value="1" class="material-icons star-icon set-review" >star_border</i></a>
-                            <a href="{{ url_for('books.new_review' , book_id=book.id, rating=2) }}"><i value="2" class="material-icons star-icon set-review" >star_border</i></a>
-                            <a href="{{ url_for('books.new_review' , book_id=book.id, rating=3) }}"><i value="3" class="material-icons star-icon set-review" >star_border</i></a>
-                            <a href="{{ url_for('books.new_review' , book_id=book.id, rating=4) }}"><i value="4" class="material-icons star-icon set-review" >star_border</i></a>
-                            <a href="{{ url_for('books.new_review' , book_id=book.id, rating=5) }}"><i value="5" class="material-icons star-icon set-review" >star_border</i></a>                    
-                            <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="status-btn waves-effect waves-light btn center-align">Leave Review</a>
-                            <div class="divider"></div>                        
-                            <div id="statusContainer">
-                            {% if book_user_info.date_started %}
-                                Started Reading:<br>{{ book_user_info.date_started.strftime('%b %d, %Y')}}
-                            {% else %}
-                                <button id="btnReading" class="status-btn waves-effect waves-light btn" type="submit" name="action" value="{{ book.id }}">Reading</button>
-                            {% endif %}                            
-                        </div>
-                        {% endif %}
-                    {% endif %}
-                </div>             
-            </div>
-            <div class="col m10">
-                <h4>{{ book['volumeInfo']['title'] }}</h4>
-                <span class="book-author">by {{ ', '.join(book['volumeInfo']['authors']) }}</span>
-                <p>{{ book['volumeInfo']['description']|safe }}</p>                             
-            </div>            
-        </div> 
-    </div>
-    <!-- User Review If Availible-->
-    {% if book_user_info.rating %}
-        <div class="row">
-            <div class="col m10 offset-m1">
-                <div class="card">
-                    <div class="card-content">
-                            <div class="card-title col m12">
-                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}">You</a> rated it                                    
-                                {% for i in range(book_user_info.rating | int) %}
-                                    <i class="material-icons star-icon" >star</i>
-                                {% endfor %}
-                                {% for j in range(book_user_info.rating | int, 5) %}
-                                    <i class="material-icons star-icon" >star_border</i>
-                                {% endfor %}
-                                on {{ book_user_info.date_rated.strftime('%b %d, %Y') }}<a href="{{ url_for('books.edit_review', book_id=book_user_info.bid) }}"><i class="material-icons create-icon">create</i></a>                                     
-                            </div>    
-                        <div class="row">
-                            <div class="col m2">
-                                {% if 'photo_url' in book_user_info %}
-                                    <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_user_info.photo_url }}"></a>
+    <div class="container">
+        <div class="row ">
+            <div class="col s12 m10 offset-m1 book-info">
+                <div class="col s12 m3 l3 xl2 center-align">
+                    {% if 'imageLinks' in book.volumeInfo %}
+                        <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="{{ book.volumeInfo.imageLinks.thumbnail }}"></a>
+                    {% else %}
+                        <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="https://via.placeholder.com/150"></a>
+                    {% endif %}    
+                    <div class="user-status">
+                        {% if not book_user_info.date_rated %}
+                            {% if not book_user_info.date_finished %}                    
+                                <a href="{{ url_for('books.new_review' , book_id=book.id, rating=1) }}"><i value="1" class="material-icons star-icon set-review" >star_border</i></a>
+                                <a href="{{ url_for('books.new_review' , book_id=book.id, rating=2) }}"><i value="2" class="material-icons star-icon set-review" >star_border</i></a>
+                                <a href="{{ url_for('books.new_review' , book_id=book.id, rating=3) }}"><i value="3" class="material-icons star-icon set-review" >star_border</i></a>
+                                <a href="{{ url_for('books.new_review' , book_id=book.id, rating=4) }}"><i value="4" class="material-icons star-icon set-review" >star_border</i></a>
+                                <a href="{{ url_for('books.new_review' , book_id=book.id, rating=5) }}"><i value="5" class="material-icons star-icon set-review" >star_border</i></a>                    
+                                <a href="{{ url_for('books.new_review', book_id=book.id) }}" class="status-btn waves-effect waves-light btn center-align">Leave Review</a>
+                                <div class="divider"></div>                        
+                                <div id="statusContainer">
+                                {% if book_user_info.date_started %}
+                                    Started Reading:<br>{{ book_user_info.date_started.strftime('%b %d, %Y')}}
                                 {% else %}
-                                    <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
-                                {% endif %}
+                                    <button id="btnReading" class="status-btn waves-effect waves-light btn" type="submit" name="action" value="{{ book.id }}">Reading</button>
+                                {% endif %}                            
                             </div>
-                            <div class="col m10">
-                                
-                                <div class="col m12 review-title">
-                                    {{ book_user_info.review_title }}
+                            {% endif %}
+                        {% endif %}
+                    </div>             
+                </div>
+                <div class="col s12 m9 l9 xl10">
+                    <h4>{{ book['volumeInfo']['title'] }}</h4>
+                    <span class="book-author">by {{ ', '.join(book['volumeInfo']['authors']) }}</span>
+                    <p>{{ book['volumeInfo']['description']|safe }}</p>                             
+                </div>            
+            </div> 
+        </div>
+        <!-- User Review If Availible-->
+        {% if book_user_info.rating %}
+            <div class="row">
+                <div class="col s12 m10 offset-m1">
+                    <div class="card">
+                        <div class="card-content">
+                                <div class="card-title col s12">
+                                    <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}">You</a> rated it                                    
+                                    {% for i in range(book_user_info.rating | int) %}
+                                        <i class="material-icons star-icon" >star</i>
+                                    {% endfor %}
+                                    {% for j in range(book_user_info.rating | int, 5) %}
+                                        <i class="material-icons star-icon" >star_border</i>
+                                    {% endfor %}
+                                    on {{ book_user_info.date_rated.strftime('%b %d, %Y') }}<a href="{{ url_for('books.edit_review', book_id=book_user_info.bid) }}"><i class="material-icons create-icon">create</i></a>                                     
+                                </div>    
+                            <div class="row">
+                                <div class="col s12 m3 l3 xl2">
+                                    {% if 'photo_url' in book_user_info %}
+                                        <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_user_info.photo_url }}"></a>
+                                    {% else %}
+                                        <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                                    {% endif %}
                                 </div>
-                                <div class="col m12 review-content">
-                                    {{ book_user_info.review_content }}
-                                </div>           
-                            </div> 
-                        </div>                    
+                                <div class="col s12 m9 l9 xl10">                                    
+                                    <div class="col s12 review-title">
+                                        {{ book_user_info.review_title }}
+                                    </div>
+                                    <div class="col s12 review-content">
+                                        {{ book_user_info.review_content }}
+                                    </div>           
+                                </div> 
+                            </div>                    
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
-    
-    <!-- Reviews will go below-->
-    {% if book_reviews %}
-    <div class="row section-header">
-        <div class="col m10 offset-m1">
-            ALL REVIEWS:
-        </div>
-    </div>
-    {% endif %}
-    
-    {% for book_review in book_reviews %}
-        {% if 'date_rated' in book_review %}
-        <div class="row">
-            <div class="col m10 offset-m1">
-            <div class="card">
-                <div class="card-content">
-                        <div class="card-title col m12">
-                            <a href="{{url_for('books.profile', user_id=book_review.uid)}}">{{ book_review.display_name }}</a> rated it                                    
-                            {% for i in range(book_review.rating | int) %}
-                                <i class="material-icons star-icon" >star</i>
-                            {% endfor %}
-                            {% for j in range(book_review.rating | int, 5) %}
-                                <i class="material-icons star-icon" >star_border</i>
-                            {% endfor %}
-                            on {{ book_review.date_rated.strftime('%b %d, %Y') }}                                  
-                        </div>    
-                    <div class="row">
-                        <div class="col m2">
-                            {% if 'photo_url' in book_review %}
-                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_review.photo_url }}"></a>
-                            {% else %}
-                                <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
-                            {% endif %}
-                        </div>
-                        <div class="col m10">                            
-                            <div class="col m12 review-title">
-                                {{ book_review.review_title }}
-                            </div>
-                            <div class="col m12 review-content">
-                                {{ book_review.review_content }}
-                            </div>           
-                        </div> 
-                    </div>                    
-                </div>
+        {% endif %}        
+        <!-- Reviews will go below-->
+        {% if book_reviews %}
+        <div class="row section-header">
+            <div class="col s12 m10 offset-m1">
+                ALL REVIEWS:
             </div>
         </div>
-        {% endif %}
-    {% endfor %}
-</div>
+        {% endif %}        
+        {% for book_review in book_reviews %}
+            {% if 'date_rated' in book_review %}
+                <div class="row">
+                    <div class="col s12 m10 offset-m1">
+                        <div class="card">
+                            <div class="card-content">
+                                    <div class="card-title col s12">
+                                        <a href="{{url_for('books.profile', user_id=book_review.uid)}}">{{ book_review.display_name }}</a> rated it                                    
+                                        {% for i in range(book_review.rating | int) %}
+                                            <i class="material-icons star-icon" >star</i>
+                                        {% endfor %}
+                                        {% for j in range(book_review.rating | int, 5) %}
+                                            <i class="material-icons star-icon" >star_border</i>
+                                        {% endfor %}
+                                        on {{ book_review.date_rated.strftime('%b %d, %Y') }}                                  
+                                    </div>    
+                                <div class="row">
+                                    <div class="col s12 m2">
+                                        {% if 'photo_url' in book_review %}
+                                            <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_review.photo_url }}"></a>
+                                        {% else %}
+                                            <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col s12 m10">                            
+                                        <div class="col s12 review-title">
+                                            {{ book_review.review_title }}
+                                        </div>
+                                        <div class="col s12 review-content">
+                                            {{ book_review.review_content }}
+                                        </div>           
+                                    </div> 
+                                </div>                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endblock %}
 
 {% block body_scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.datepicker');
-      var instances = M.Datepicker.init(elems, {
-          format: 'mm/dd/yyyy'});
-    });
-  </script>
-
-<script>
-    const ratingField = document.getElementById("rating");
-    const starElements = document.getElementsByClassName("set-review");
-    const stars = new Array;
-
-    const setStars = (rating) => {
-      for (let i=0; i<rating; i++) {
-          stars[i].innerHTML= "star";
-      };
-      for (let j=rating; j<5; j++ ){
-          stars[j].innerHTML="star_border";
-      };
-    };
-
-    const removeStars = (rating) => {
-      for (let i=rating-1; i<5; i++) {
-          stars[i].innerHTML= "star_border";
-      };
-    };
-
-    for (let i=0; i<starElements.length; i++) {
-        starElements[i].addEventListener('click', function(){
-          let starValue = this.getAttribute("value");
-          if (this.innerHTML == "star_border") {
-              setStars(starValue);
-              ratingField.value = starValue ;
-          } else {
-              removeStars(starValue);
-              ratingField.value = starValue - 1;
-          };    
-        }, false);
-        stars.push(starElements[i])
-    }
-</script>
-
-<script>
-    const btnReading = document.getElementById('btnReading')
-    const statusContainer = document.getElementById('statusContainer')
-    const postReadingRequest = (bookId) => {
-        return $.ajax({
-          type:'POST',
-          url: '/reading',
-          data: JSON.stringify({bookId: bookId}),          
-          dataType: 'json',
-          contentType: 'application/json;charset=UTF-8'
+    <script>
+        // Materialize Datepicker
+        document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.datepicker');
+        var instances = M.Datepicker.init(elems, {
+            format: 'mm/dd/yyyy'});
         });
-    };
+    </script>
 
-    btnReading.addEventListener('click', e => {
-        bookId = btnReading.value;
-        postReadingRequest(bookId).then((resp) =>{
-            if (resp['status'] == 'success') {
-                let startDate = resp['startDate']
-                statusContainer.innerHTML = "Started Reading<br>"+startDate
-            }
+    <script>
+        // Star Rating 
+        const ratingField = document.getElementById("rating");
+        const starElements = document.getElementsByClassName("set-review");
+        const stars = new Array;
+
+        const setStars = (rating) => {
+        for (let i=0; i<rating; i++) {
+            stars[i].innerHTML= "star";
+        };
+        for (let j=rating; j<5; j++ ){
+            stars[j].innerHTML="star_border";
+        };
+        };
+
+        const removeStars = (rating) => {
+        for (let i=rating-1; i<5; i++) {
+            stars[i].innerHTML= "star_border";
+        };
+        };
+
+        for (let i=0; i<starElements.length; i++) {
+            starElements[i].addEventListener('click', function(){
+            let starValue = this.getAttribute("value");
+            if (this.innerHTML == "star_border") {
+                setStars(starValue);
+                ratingField.value = starValue ;
+            } else {
+                removeStars(starValue);
+                ratingField.value = starValue - 1;
+            };    
+            }, false);
+            stars.push(starElements[i])
+        }
+    </script>
+
+    <script>
+        // Set Reading Status
+        const btnReading = document.getElementById('btnReading')
+        const statusContainer = document.getElementById('statusContainer')
+        const postReadingRequest = (bookId) => {
+            return $.ajax({
+            type:'POST',
+            url: '/reading',
+            data: JSON.stringify({bookId: bookId}),          
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8'
+            });
+        };
+
+        btnReading.addEventListener('click', e => {
+            bookId = btnReading.value;
+            postReadingRequest(bookId).then((resp) =>{
+                if (resp['status'] == 'success') {
+                    let startDate = resp['startDate']
+                    statusContainer.innerHTML = "Started Reading<br>"+startDate
+                }
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}
