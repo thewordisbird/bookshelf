@@ -9,7 +9,11 @@
                         <div class="row">
                             <div class="card-title col s12">
                                 <div class="col s12 m1">
-                                    <img class="cover-img-review" src="{{ book['volumeInfo']['imageLinks']['thumbnail'] }}">
+                                    {% if 'imageLinks' in book.volumeInfo %}
+                                        <img  class="cover-img-review" src="{{ book.volumeInfo.imageLinks.thumbnail }}" alt="{{ book['volumeInfo']['title'] }} cover "></a>
+                                    {% else %}
+                                        <img  class="cover-img-review" src="https://via.placeholder.com/150" alt="{{ book['volumeInfo']['title'] }} cover "></a>
+                                    {% endif %}    
                                 </div>
                                 <div class="col s12 m11">
                                     <span class="book-title"><h5>{{ book['volumeInfo']['title'] }}</a></h5></span>

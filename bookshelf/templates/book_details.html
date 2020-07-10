@@ -6,9 +6,9 @@
             <div class="col s12 m10 offset-m1 book-info">
                 <div class="col s12 m3 l3 xl2 center-align">
                     {% if 'imageLinks' in book.volumeInfo %}
-                        <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="{{ book.volumeInfo.imageLinks.thumbnail }}"></a>
+                        <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="{{ book.volumeInfo.imageLinks.thumbnail }}" alt="{{ book['volumeInfo']['title'] }} cover "></a>
                     {% else %}
-                        <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="https://via.placeholder.com/150"></a>
+                        <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="https://via.placeholder.com/150" alt="{{ book['volumeInfo']['title'] }} cover "></a>
                     {% endif %}    
                     <div class="user-status">
                         {% if not book_user_info.date_rated %}
@@ -57,9 +57,9 @@
                             <div class="row">
                                 <div class="col s12 m3 l3 xl2">
                                     {% if 'photo_url' in book_user_info %}
-                                        <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_user_info.photo_url }}"></a>
+                                        <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_user_info.photo_url }} " alt="{{ book_user_info.display_name }} photo"></a>
                                     {% else %}
-                                        <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                                        <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150" alt="{{ book_user_info.display_name }} photo"></a>
                                     {% endif %}
                                 </div>
                                 <div class="col s12 m9 l9 xl10">                                    
@@ -103,9 +103,9 @@
                                 <div class="row">
                                     <div class="col s12 m2">
                                         {% if 'photo_url' in book_review %}
-                                            <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_review.photo_url }}"></a>
+                                            <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="{{ book_review.photo_url }}" alt="{{ book_review.display_name }} photo"></a>
                                         {% else %}
-                                            <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150"></a>
+                                            <a href="{{url_for('books.profile', user_id=book_user_info.uid)}}"><img class="user-img" src="https://via.placeholder.com/150" alt="{{ book_review.display_name }} photo"></a>
                                         {% endif %}
                                     </div>
                                     <div class="col s12 m10">                            
