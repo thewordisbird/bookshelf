@@ -6,12 +6,14 @@
     </ul>
     <!-- Sidenav for nav collapse -->
     <ul class="sidenav">
-        <form action="{{ url_for('books.search') }}" method="get">
-            <div class="input-field grey lighten-4">
-                <input type="search" name="q" placeholder="Title, Author, ISBN, etc..." required>
-                <label class="label-icon" for="search"><i class="material-icons search-icon">search</i></label>
-            </div>         
-        </form>
+        <li>
+            <form action="{{ url_for('books.search') }}" method="get">
+                <div class="input-field grey lighten-4">
+                    <input type="search" name="q" placeholder="Title, Author, ISBN, etc..." required>
+                    <label class="label-icon" for="search"><i class="material-icons search-icon">search</i></label>
+                </div>         
+            </form>
+        </li>
         {% if session['_user'] %}
             <li><a href="{{ url_for('books.index') }}">Home</a></li>   
             <li><a href="{{ url_for('books.profile', user_id=session['_user']['uid']) }}">Profile</a></li>

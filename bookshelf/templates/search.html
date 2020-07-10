@@ -11,9 +11,9 @@
                                 <div class="row">
                                     <div class="col s12 m2">
                                         {% if 'imageLinks' in book.volumeInfo %}
-                                            <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="{{ book.volumeInfo.imageLinks.thumbnail }}"></a>
+                                            <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="{{ book.volumeInfo.imageLinks.thumbnail }}" alt="{{ book.volumeInfo.title }} cover"></a>
                                         {% else %}
-                                            <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="https://via.placeholder.com/150"></a>
+                                            <a href="{{ url_for('books.book_details', book_id=book.id) }}"><img  class="cover-img" src="https://via.placeholder.com/150" alt="{{ book.volumeInfo.title }} cover"></a>
                                         {% endif %}                                
                                     </div>
                                     <div class="col s12 m10">

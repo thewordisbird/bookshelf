@@ -23,9 +23,9 @@
                             <div class="row">
                                 <div class="col s12 m2 cover-img-wrapper center">
                                     {% if 'cover_url' in book %}
-                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src={{ book.cover_url }} ></a>
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="{{ book.cover_url }}" alt="{{ book.title }} cover" ></a>
                                     {% else %}
-                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="https://via.placeholder.com/150"></a>
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="https://via.placeholder.com/150" alt="{{ book.title }} cover"></a>
                                     {% endif %}
                                     
                                 </div>
@@ -58,9 +58,9 @@
                             <div class="row">
                                 <div class="col s12 m2 cover-img-wrapper center">
                                     {% if 'cover_url' in book %}
-                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src={{ book.cover_url }} ></a>
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="{{ book.cover_url }}" alt="{{ book.title }} cover" ></a>
                                     {% else %}
-                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="https://via.placeholder.com/150"></a>
+                                        <a href="{{ url_for('books.book_details', book_id=book.bid) }}"><img class="cover-img" src="https://via.placeholder.com/150" alt="{{ book.title }} cover"></a>
                                     {% endif %}
                                 </div>
                                 <div class="col s12 m10">
