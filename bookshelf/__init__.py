@@ -1,5 +1,5 @@
 from flask import Flask
-from config import DevelopmentConfig, TestingConfig, ProcudtionConfig
+from config import DevelopmentConfig, TestingConfig, ProductionConfig
 #import firebase_admin
 #from firebase_admin import credentials
 #from dotenv import load_dotenv, find_dotenv

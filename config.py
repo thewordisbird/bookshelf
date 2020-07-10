@@ -6,7 +6,7 @@ class Config:
     DEBUG=False
     TESTING=False
 
-class ProcudtionConfig(Config):
+class ProductionConfig(Config):
     SESSION_COOKIE_SECURE = True
     SECURE_FIREBASE=True
     GOOGLE_APPLICATION_CREDENTIAL = secrets_wrapper.access_secret_version(PROJECT_ID, 'GOOGLE_APPLICATION_CREDENTIAL')
