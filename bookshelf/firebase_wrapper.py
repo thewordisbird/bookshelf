@@ -184,7 +184,7 @@ class Firestore:
         
         # Build Query
         if order_by:
-            docs_ref.order_by(order_by[0], direction=order_by[1])
+            docs_ref = docs_ref.order_by(order_by[0], direction=order_by[1])
         
         for filter in filters:
             docs_ref = docs_ref.where(filter[0], filter[1], filter[2])
