@@ -18,7 +18,8 @@ def create_app(config=DevelopmentConfig):
     app.config.from_object(config)
 
     # Initialize firebase    
-    firebase.init_app(app)
+    firebase.init_app(app.config.get('GOOGLE_APPLICATION_CREDENTIAL', None), \
+        app.config.get('WEB_API_KEY', None))
 
     # Register Blueprints
     from bookshelf.main.routes import bp as books_bp

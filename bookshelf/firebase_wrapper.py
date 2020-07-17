@@ -8,14 +8,12 @@ from flask import abort, request, redirect, url_for
 
 class Firebase:
 
-    def __init__(self, flask_app=None):
-        self.flask_app = flask_app
-        self.firebase_app = None
+    def __init__(self):
+        self.google_application_credentials = None
+        self.api_key = None
+       
 
-        if self.flask_app is not None:
-            self.init_app(flask_app)
-
-    def init_app(self, flask_app):
+    def init_app(self, google_application_credential, web_api_key):
         """
         Returns an initialized Firebase object.
 
@@ -24,12 +22,11 @@ class Firebase:
         Service Accounts > Generate New Private Key. Save Key and set as 
         enviornmental variable
         """
-        self.flask_app = flask_app
-        cred_path = self.flask_app.config.get('GOOGLE_APPLICATION_CREDENTIALS', None)
-
+        self.google_application_credential = google_application_credential
+        self.web_api_key = web_api_key
         try:
-            if cred_path:
-                cred = credentials.Certificate(cred_path)            
+            if self.google_application_credential:
+                cred = credentials.Certificate(self.google_application_credential)     
             else:
                 cred = credentials.ApplicationDefault()
         except ValueError:
@@ -46,8 +43,9 @@ class Firebase:
         # Probably needs error hadling incase already deleted. 
         firebase_admin.delete_app(self.firebase_app)
 
+
     def auth(self):
-        return Auth()
+        return Auth(self.web_api_key)
 
     def firestore(self):
         return Firestore()
@@ -57,6 +55,8 @@ class Firebase:
 
 
 class Auth:
+    def __init__(self, web_api_key):
+        self.web_api_key = web_api_key
 
     @classmethod
     def login_required(cls, f):
@@ -142,13 +142,13 @@ class Auth:
     def raise_detailed_error(self, request_object):
         try:
             request_object.raise_for_status()
-        except HTTPError as e:
+        except Exception as e:
             # raise detailed error message
             # TODO: Check if we get a { "error" : "Permission denied." } and handle automatically
-            raise HTTPError(e, request_object.text)
+            raise Exception(e, request_object.text)
 
     def send_password_reset_email(self, email):
-        endpoint = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={os.environ.get('WEB_API_KEY')}"
+        endpoint = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={self.web_api_key}"
         headers = {"content-type": "application/json; charset=UTF-8"}
         data = json.dumps({"requestType": "PASSWORD_RESET", "email": email})
         request_object = requests.post(endpoint, headers=headers, data=data)
@@ -221,4 +221,4 @@ class Firestore:
         return None
 
     
-                
+              

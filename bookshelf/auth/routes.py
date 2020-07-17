@@ -138,8 +138,14 @@ def reset_password():
     """Sends password reset to user"""
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        auth.send_password_reset_email(form.data['email'])
-        return redirect(url_for('auth.login'))
+        try:
+            auth.send_password_reset_email(form.data['email'])
+        except Exception as e:
+            print(f"Error:\n\t{e}")
+        else:
+            print(f"Password recovery email sent to {form.data['email']}")
+        finally:
+            return redirect(url_for('auth.login'))
     return render_template('reset_password.html', title="bookshelf | Reset Password", form=form)
 
 

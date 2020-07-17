@@ -1,7 +1,9 @@
 import os
 from bookshelf import secrets_wrapper
+
 PROJECT_ID = "bookshelf-89de1"
 TESTING_PROJECT_ID = "bookshelf-test-20855"
+
 class Config:
     DEBUG=False
     TESTING=False
