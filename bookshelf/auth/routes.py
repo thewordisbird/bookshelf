@@ -61,7 +61,6 @@ def register():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    ### CHANGE secure to True for production ###
     """
     Create session cookie from idToken passed from client
 
@@ -71,6 +70,7 @@ def login():
     Stores User object in Flask session for quick access.
     """
     form = LoginForm(next = request.args.get('next') or '/')
+    
     # Clear session:
     if '_user' in session:
         session.pop('_user')

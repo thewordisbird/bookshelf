@@ -1,5 +1,6 @@
+import os
 from flask import Flask
-from config import DevelopmentConfig, TestingConfig, ProductionConfig
+#from config import DevelopmentConfig, TestingConfig, ProductionConfig
 #import firebase_admin
 #from firebase_admin import credentials
 #from dotenv import load_dotenv, find_dotenv
@@ -9,16 +10,22 @@ from bookshelf.firebase_wrapper import Firebase
 # Global Objects
 firebase = Firebase()
 
-def create_app(config=ProductionConfig):
+config_name = os.environ.get("FLASK_CONFIG", "production")
+
+def create_app(config_name=config_name):
     """Create an application instance with the desired configuration.
 
     Also where extentions and blueprints are registered with the instance
     """
+    print('Creating Applications')
     app = Flask(__name__)
-    app.config.from_object(config)
+    print('config_name: ', config_name)
+    config_module = f"config.{config_name.capitalize()}Config"
+    
+    app.config.from_object(config_module)
 
     # Initialize firebase    
-    firebase.init_app(app.config.get('GOOGLE_APPLICATION_CREDENTIAL', None), \
+    firebase.init_app(app.config.get('GOOGLE_APPLICATION_CREDENTIALS', None), \
         app.config.get('WEB_API_KEY', None))
 
     # Register Blueprints

@@ -1,0 +1,9 @@
+Flask
+Flask-WTF
+email-validator
+blinker
+gunicorn
+firebase-admin
+google-cloud-secret-manager
+pytest-cov
+pytest-flask

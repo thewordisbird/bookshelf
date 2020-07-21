@@ -1,33 +1,34 @@
 import os
 from bookshelf import secrets_wrapper
 
-PROJECT_ID = "bookshelf-89de1"
-TESTING_PROJECT_ID = "bookshelf-test-20855"
-
 class Config:
-    DEBUG=False
-    TESTING=False
+    """Base configuration"""
+    DEBUG = False
+    TESTING = False
+    PROJECT_ID = os.environ.get('PROJECT_ID')
+    GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    SECRET_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'SECRET_KEY')    
+    WEB_API_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'WEB_API_KEY')
 
 class ProductionConfig(Config):
+    """Production configuration"""
     SESSION_COOKIE_SECURE = True
-    SECURE_FIREBASE=True
-    #GOOGLE_APPLICATION_CREDENTIAL = secrets_wrapper.access_secret_version(PROJECT_ID, 'GOOGLE_APPLICATION_CREDENTIAL')
-    GOOGLE_APPLICATION_CREDENTIAL = os.environ.get('GOOGLE_APPLICATION_CREDENTIAL')
-    SECRET_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'SECRET_KEY')    
-    WEB_API_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'WEB_API_KEY')
+    SECURE_FIREBASE = True
+
 
 class DevelopmentConfig(Config):
-    DEBUG=True
-    SECURE_FIREBASE=False
-    GOOGLE_APPLICATION_CREDENTIAL = os.environ.get('GOOGLE_APPLICATION_CREDENTIAL')
-    SECRET_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'SECRET_KEY')    
-    WEB_API_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'WEB_API_KEY')
+    """Development Configuration"""
+    DEBUG = True
+    SESSION_COOKIE_SECURE = False
+    SECURE_FIREBASE = False
+    
 
 class TestingConfig(Config):
-    TESTING=True
+    """Testing configuration"""
+    TESTING = True
     WTF_CSRF_ENABLED = False
+    SESSION_COOKIE_SECURE = False
+    SECURE_FIREBASE = False
+    
 
-    #SECRET_KEY = secrets_wrapper.access_secret_version(TESTING_PROJECT_ID, 'SECRET_KEY')
-    #GOOGLE_APPLICATION_CREDENTIAL = secrets_wrapper.access_secret_version(TESTING_PROJECT_ID, 'GOOGLE_APPLICATION_CREDENTIAL')
-    #WEB_API_KEY = secrets_wrapper.access_secret_version(TESTING_PROJECT_ID, 'WEB_API_KEY')
     

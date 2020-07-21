@@ -13,7 +13,7 @@ class Firebase:
         self.api_key = None
        
 
-    def init_app(self, google_application_credential, web_api_key):
+    def init_app(self, google_application_credentials, web_api_key):
         """
         Returns an initialized Firebase object.
 
@@ -22,11 +22,11 @@ class Firebase:
         Service Accounts > Generate New Private Key. Save Key and set as 
         enviornmental variable
         """
-        self.google_application_credential = google_application_credential
+        self.google_application_credentials = google_application_credentials
         self.web_api_key = web_api_key
         try:
-            if self.google_application_credential:
-                cred = credentials.Certificate(self.google_application_credential)     
+            if self.google_application_credentials:
+                cred = credentials.Certificate(self.google_application_credentials)     
             else:
                 cred = credentials.ApplicationDefault()
         except ValueError:
@@ -155,6 +155,9 @@ class Auth:
         self.raise_detailed_error(request_object)
         return request_object.json()
 
+    def clear_auth(self):
+        pass
+
 
 class Firestore:
     def set_document(self, document_path, data):
@@ -219,6 +222,10 @@ class Firestore:
             d['doc_id'] = doc.id
             return d         
         return None
+
+    def clear_firestore(self):
+        pass
+
 
     
               
