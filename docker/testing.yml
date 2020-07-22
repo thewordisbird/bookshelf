@@ -8,7 +8,7 @@ services:
         environment:
             FLASK_ENV: ${FLASK_ENV}
             FLASK_CONFIG: ${FLASK_CONFIG}
-            GOOGLE_APPLICATION_CREDENTIAL: ${GOOGLE_APPLICATION_CREDENTIALS}
+            GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
             PROJECT_ID: ${PROJECT_ID}
         volumes:
             - ${PWD}:/usr/src/app
@@ -17,7 +17,7 @@ services:
             - -c
             - |
                 pip install -e .
-                flask run --host 0.0.0.0
+                pytest -svv --cov=application --cov-report=term-missing
         ports:
             - "5000:5000"
             

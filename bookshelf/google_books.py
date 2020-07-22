@@ -32,6 +32,7 @@ def get_books(query, max_results=25):
 
 
 def thumbnail_to_https(book):
+    """Modifies cover thumbnail url from http:// to https://"""
     if 'imageLinks' in book['volumeInfo'] and 'thumbnail' in book['volumeInfo']['imageLinks']:
         thumbnail_url = book['volumeInfo']['imageLinks']['thumbnail']
         #print(thumbnail_url)

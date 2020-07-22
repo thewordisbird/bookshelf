@@ -1,7 +1,7 @@
 [
     {
         "name": "FLASK_ENV",
-        "value": "production"
+        "value": "development"
     },
     {
         "name": "FLASK_CONFIG",

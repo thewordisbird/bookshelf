@@ -11,7 +11,6 @@ import click
 # Ensure an environment variable exists and has a value
 def setenv(variable, default):
     os.environ[variable] = os.getenv(variable, default)
-    #print(os.getenv('APPLICATION_CONFIG'))
 
 setenv("APPLICATION_CONFIG", "development")
 
@@ -57,6 +56,7 @@ def flask(subcommand):
         p.send_signal(signal.SIGINT)
         p.wait()
 
+
 def docker_compose_cmdline(commands_string=None):
     config = os.getenv("APPLICATION_CONFIG")
     configure_app(config)
@@ -94,11 +94,34 @@ def compose(subcommand):
         p.wait()
 
 
+def docker_compose_cmdline(commands_string=None):
+    config = os.getenv("APPLICATION_CONFIG")
+    configure_app(config)
+
+    compose_file = docker_compose_file(config)
+
+    if not os.path.isfile(compose_file):
+        raise ValueError(f"The file {compose_file} does not exist")
+
+    command_line = [
+        "docker-compose",
+        "-p",
+        config,
+        "-f",
+        compose_file,
+    ]
+
+    if commands_string:
+        command_line.extend(commands_string.split(" "))
+
+    return command_line
+
 @cli.command()
 @click.argument("filenames", nargs=-1)
 def test(filenames):
     os.environ["APPLICATION_CONFIG"] = "testing"
     configure_app(os.getenv("APPLICATION_CONFIG"))
+    
 
     cmdline = docker_compose_cmdline("up")
     subprocess.call(cmdline)
@@ -114,8 +137,8 @@ def test(filenames):
     # cmdline.extend(filenames)
     # subprocess.call(cmdline)
 
-    # cmdline = docker_compose_cmdline("down")
-    # subprocess.call(cmdline)
+    cmdline = docker_compose_cmdline("down")
+    subprocess.call(cmdline)
 
 
 if __name__ == "__main__":

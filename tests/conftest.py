@@ -1,7 +1,9 @@
+import os
 import pytest
-
+import firebase_admin
 from bookshelf import create_app
-
+from bookshelf.firebase_wrapper import Firebase
+from bookshelf.secrets_wrapper import access_secret_version
 
 @pytest.fixture
 def app():
@@ -9,25 +11,20 @@ def app():
 
     return app
 
+# Fixtures for firebase_wrapper
 @pytest.fixture(scope="function")
-def auth(app):
-    """Delete all authentecated users and yield auth object"""
-    with app.app_context():
-        auth = app.firebase.auth()
-        #auth.clear_auth()
-    
-    yield auth
+def firebase():
+    if firebase_admin._apps:
+        #print('deleting firebase app')
+        firebase_admin.delete_app(firebase_admin._apps['[DEFAULT]'])
 
-    #auth.clear_auth()
+    google_application_credentials = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    web_api_key = access_secret_version(os.getenv("PROJECT_ID"), "WEB_API_KEY")
 
+    firebase = Firebase()
+    firebase.init_app(google_application_credentials, web_api_key)
 
-@pytest.fixture(scope="function")
-def firestore(app):
-    """Delete all data from firestore and yield firestore object"""
-    with app.app_context():
-        firestore = app.firebase.firestore()
-        #firestore.clear_firestore()
+    yield firebase
 
-    yield firestore
-
-    #firestore.clear_firestore()
+    # Delete firebase app instance
+    firebase_admin.delete_app(firebase_admin._apps['[DEFAULT]'])

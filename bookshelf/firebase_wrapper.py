@@ -35,6 +35,7 @@ class Firebase:
             print(f'error: {e}')
             raise e
         else:
+            print('initializing app')
             self.firebase_app = firebase_admin.initialize_app(cred)
                 
 
@@ -173,6 +174,16 @@ class Firestore:
             return doc.to_dict()
         return None
     
+    def update_document(self, document_path, data):
+        db = firestore.client()
+        doc_ref = db.document(document_path)
+        return doc_ref.update(data)
+
+    def delete_document(self, document_path):
+        db = firestore.client()
+        doc_ref = db.document(document_path)
+        return doc_ref.delete()
+
     def get_collection(self, collection_path, limit=25):
         db = firestore.client()
         docs_ref =  db.collection(collection_path)
@@ -197,23 +208,14 @@ class Firestore:
         return list(map(self.doc_to_dict, docs))
 
 
-    def update_document(self, document_path, data):
-        db = firestore.client()
-        doc_ref = db.document(document_path)
-        return doc_ref.update(data)
-
-    def delete_document(self, document_path):
-        db = firestore.client()
-        doc_ref = db.document(document_path)
-        return doc_ref.delete()
-    
     def set_documents_from_json(self, collection_path, json_file_path):
         db = firestore.client()
         with open(json_file_path) as f:
             data = json.load(f)
-            for item in data:
-                doc_ref = db.document(f"{collection_path}/item['_id']")
-                doc_ref.set(item)
+        
+        for item in data:
+            doc_ref = db.document(f"{collection_path}/{item['_id']}")
+            doc_ref.set(item)
 
     def doc_to_dict(self, doc):
         """Convert a Firestore document to dictionary"""

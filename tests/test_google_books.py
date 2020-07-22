@@ -14,13 +14,13 @@ def test_get_book(book_id, title):
 
 @pytest.mark.parametrize('query', 
                         [
-                            ('Steve Jobs')
+                            ('Steve Jobs'),
                         ])
 def test_get_books(query):
     # WHEN get_books is passed a search query
     # THEN get_books will return the first 25 (default value) items results
     books = get_books(query)
-    assert len(books['items']) == 25
+    assert len(books) == 25
 
 @pytest.mark.parametrize('query, max_results', 
                         [
@@ -31,4 +31,4 @@ def test_get_books_max_results(query, max_results):
     # WHEN get_books is passed a search query and max_results amount
     # THEN get_books will return the number of results requested
     books = get_books(query, max_results)
-    assert len(books['items']) == max_results
+    assert len(books) == max_results
