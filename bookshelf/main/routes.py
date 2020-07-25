@@ -97,8 +97,8 @@ def edit_profile(user_id):
                     session['_user'][k] = update_data[k]
 
         return redirect(url_for('books.profile', user_id=user_id))
-    return render_template('edit_profile_form.html', form=form, \
-        email_provider=email_provider)
+    return render_template('edit_profile_form.html', title=f"bookshelf | edit | {session['_user']['display_name']}", \
+        form=form, email_provider=email_provider)
 
 
 @bp.route('/books/search', methods=['GET'])
@@ -126,6 +126,10 @@ def new_review(book_id):
     rating=int(request.args.get('rating', 0))
     form = ReviewForm(rating=rating)
     book = google_books.get_book(book_id)
+    print(f"VALIDATION: {form.validate()}")
+    print(f"REQUEST DATA: {request.get_data}, {request.form}")
+    print(f"FORM DATA: {form.data}")
+    print(f"ERRORS: {form.errors}")
     if form.validate_on_submit():
         data = {
             'uid': session['_user']['uid'],

@@ -24,19 +24,21 @@ class Firebase:
         """
         self.google_application_credentials = google_application_credentials
         self.web_api_key = web_api_key
-        try:
-            if self.google_application_credentials:
-                cred = credentials.Certificate(self.google_application_credentials)     
+        
+        if not firebase_admin._apps:
+            try:
+                if self.google_application_credentials:
+                    cred = credentials.Certificate(self.google_application_credentials)     
+                else:
+                    cred = credentials.ApplicationDefault()
+            except ValueError:
+                print('App already initialized')
+            except Exception as e:
+                print(f'error: {e}')
+                raise e
             else:
-                cred = credentials.ApplicationDefault()
-        except ValueError:
-            print('App already initialized')
-        except Exception as e:
-            print(f'error: {e}')
-            raise e
-        else:
-            print('initializing app')
-            self.firebase_app = firebase_admin.initialize_app(cred)
+                print('initializing app')
+                self.firebase_app = firebase_admin.initialize_app(cred)
                 
 
     def delete_app(self):

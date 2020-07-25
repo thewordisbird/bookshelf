@@ -17,7 +17,7 @@ services:
             - -c
             - |
                 pip install -e .
-                pytest -svv --cov=application --cov-report=term-missing
+                pytest tests/test_main.py -v
         ports:
             - "5000:5000"
             

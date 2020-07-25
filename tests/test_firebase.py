@@ -156,3 +156,14 @@ def test_collections(firebase):
     firestore_users = firebase_firestore.get_collection("users")
 
     assert len(firestore_users) == 5
+
+    with open(json_path) as f:
+        json_data = json.load(f)
+
+    for item in json_data:
+        firebase_firestore.delete_document(f"users/{item['_id']}")
+
+
+def test_get_collection_group(firebase):
+    # Need to automate build of firestore with nested collections to test
+    pass
