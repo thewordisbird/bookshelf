@@ -1,7 +1,7 @@
 # bookshelf
 A web application to rate and review books.
 
-[bookshelf.thewordisbird.dev] (https://bookshelf.thewordisbird.dev)
+[bookshelf.thewordisbird.dev](https://bookshelf.thewordisbird.dev)
 
 ## Motivation
 A project to learn and implement a python flask application using Google's Firebase cloud services. At this point this includes Firebase Auth and Firestore. Updates will include Firebase Storage to store user profile images, Firebase Hosting to take advantage of serving staic files over a CDN, and Firebase Cloud Functions to manage firestore maintnance.
@@ -24,11 +24,11 @@ A project to learn and implement a python flask application using Google's Fireb
 
 ## Setup/Installation
 Before installation the following external services are required: 
-* A [Firebase] (https://firebase.google.com) account is required along with a seperate project for development and testing.
+* A [Firebase](https://firebase.google.com) account is required along with a seperate project for development and testing.
 * A [Google Cloud] (https://cloud.google.com) account with the secrets manager api enabled with the following secrets:
     * SECRET_KEY - used by flask for CSRF protection
     * WEB_API_KEY - used by Firebase for REST api requests.
-* Install [Docker] (https://docker.com).
+* Install [Docker](https://docker.com).
 
 Clone repository:
     git clone https://github.com/thewordisbird/bookshelf.git
