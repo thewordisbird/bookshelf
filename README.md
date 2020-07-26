@@ -45,11 +45,11 @@ Setup secrets, local keys, and config files:
 
 ## Usage
 The application is controlled in the manage.py file. This file will set all the relevant config values for the desired run enviornment and build the docker file based off the appropriate .yml docker-compose file.
-* Run locally in development mode. Runs on localhost:5000.
+* Run locally in development mode. Runs on localhost:5000.  
     $ ./manage.py compose up
-* Stop locally run instance:
+* Stop locally run instance:  
     $ ./manage.py compose down
-* Run tests.
+* Run tests.  
     $ ./manage.py test
 
 ## License
