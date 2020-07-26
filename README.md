@@ -25,7 +25,7 @@ A project to learn and implement a python flask application using Google's Fireb
 ## Setup/Installation
 Before installation the following external services are required: 
 * A [Firebase](https://firebase.google.com) account is required along with a seperate project for development and testing.
-* A [Google Cloud] (https://cloud.google.com) account with the secrets manager api enabled with the following secrets:
+* A [Google Cloud](https://cloud.google.com) account with the secrets manager api enabled with the following secrets:
     * SECRET_KEY - used by flask for CSRF protection
     * WEB_API_KEY - used by Firebase for REST api requests.
 * Install [Docker](https://docker.com).
