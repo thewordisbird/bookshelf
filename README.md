@@ -30,8 +30,8 @@ Before installation the following external services are required:
     * WEB_API_KEY - used by Firebase for REST api requests.
 * Install [Docker](https://docker.com).
 
-Clone repository:
-    git clone https://github.com/thewordisbird/bookshelf.git
+Clone repository:    
+    ```git clone https://github.com/thewordisbird/bookshelf.git```
 
 Setup secrets, local keys, and config files:
 * This app uses the google secrets manager api. The following secrets are required for every connected project (production, development, testing, etc.):
@@ -45,12 +45,12 @@ Setup secrets, local keys, and config files:
 
 ## Usage
 The application is controlled in the manage.py file. This file will set all the relevant config values for the desired run enviornment and build the docker file based off the appropriate .yml docker-compose file.
-* Run locally in development mode. Runs on localhost:5000.  
-    $ ./manage.py compose up
-* Stop locally run instance:  
-    $ ./manage.py compose down
-* Run tests.  
-    $ ./manage.py test
+* Run locally in development mode. Runs on localhost:5000:       
+    ```$ ./manage.py compose up```
+* Stop locally run instance:    
+    ```$ ./manage.py compose down```
+* Run tests:    
+    ```$ ./manage.py test```
 
 ## License
 MIT License
