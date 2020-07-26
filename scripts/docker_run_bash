@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Change to project directory
-cd ~/code/bookshelf
-
-# Run docker run command
-docker run --rm -it --env-file ./.env -p 8080:8080 --mount type=bind,source="$(pwd)",destination=/usr/src/app bookshelf

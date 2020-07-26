@@ -17,7 +17,7 @@ services:
             - -c
             - |
                 pip install -e .
-                pytest tests/test_main.py -v
+                pytest -v
         ports:
             - "5000:5000"
             

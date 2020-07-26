@@ -15,14 +15,12 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SECURE = True
     SECURE_FIREBASE = True
 
-
 class DevelopmentConfig(Config):
     """Development Configuration"""
     DEBUG = True
     SESSION_COOKIE_SECURE = False
     SECURE_FIREBASE = False
     
-
 class TestingConfig(Config):
     """Testing configuration"""
     TESTING = True
