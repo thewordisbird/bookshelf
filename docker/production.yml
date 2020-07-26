@@ -4,7 +4,7 @@ services:
     web:
         build:
             context: ${PWD}
-            dockerfile: docker/web/Dockerfile
+            dockerfile: docker/web/Dockerfile.production
         environment:
             FLASK_ENV: ${FLASK_ENV}
             FLASK_CONFIG: ${FLASK_CONFIG}
@@ -12,12 +12,7 @@ services:
             PROJECT_ID: ${PROJECT_ID}
         volumes:
             - ${PWD}:/usr/src/app
-        command: 
-            - /bin/sh
-            - -c
-            - |
-                pip install -e .
-                pytest -v
+        command: gunicorn --bind :8080 -w 4 -b 0.0.0.0:5000 wsgi:app
         ports:
-            - "5000:5000"
+            - "8080:8080"
             

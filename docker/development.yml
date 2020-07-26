@@ -4,7 +4,7 @@ services:
     web:
         build:
             context: ${PWD}
-            dockerfile: docker/Dockerfile
+            dockerfile: docker/web/Dockerfile
         environment:
             FLASK_ENV: ${FLASK_ENV}
             FLASK_CONFIG: ${FLASK_CONFIG}
