@@ -9,11 +9,13 @@ RUN apt-get -yqq update
 # Copy all files to container:
 COPY . .
 
+# Set ARGS from build to be used by ENV to set enviornmental variables.
 ARG FLASK_ENV
 ARG FLASK_CONFIG
 ARG GOOGLE_APPLICATION_CREDENTIALS
 ARG PROJECT_ID
 
+# Set enviornmental variablse
 ENV FLASK_ENV=$FLASK_ENV
 ENV FLASK_CONFIG=$FLASK_CONFIG
 ENV GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
@@ -22,8 +24,7 @@ ENV PROJECT_ID=$PROJECT_ID
 # Install requierments 
 RUN pip install -r requirements.txt
 
-
 ENV PORT=8080
 CMD exec gunicorn --bind :$PORT --workers 4 --threads 8 wsgi:app
-#CMD flask run --host 0.0.0.0
+
 
