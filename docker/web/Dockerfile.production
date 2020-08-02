@@ -1,12 +1,29 @@
 FROM python:3.7
 
-RUN mkdir /usr/src/requirements
-RUN mkdir /usr/src/app
-
 # Set directory for app:
 WORKDIR /usr/src/app
 
-# Make directories for requirements and code
-COPY requirements /usr/src/requirements
-RUN pip install -r /usr/src/requirements/production.txt
+# Install and update system dependencies:
+RUN apt-get -yqq update
+
+# Copy all files to container:
+COPY . .
+
+ARG FLASK_ENV
+ARG FLASK_CONFIG
+ARG GOOGLE_APPLICATION_CREDENTIALS
+ARG PROJECT_ID
+
+ENV FLASK_ENV=$FLASK_ENV
+ENV FLASK_CONFIG=$FLASK_CONFIG
+ENV GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
+ENV PROJECT_ID=$PROJECT_ID
+
+# Install requierments 
+RUN pip install -r requirements.txt
+
+
+ENV PORT=8080
+CMD exec gunicorn --bind :$PORT --workers 4 --threads 8 wsgi:app
+#CMD flask run --host 0.0.0.0
 

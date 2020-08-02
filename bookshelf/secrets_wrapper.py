@@ -7,10 +7,10 @@ def access_secret_version(project_id, secret_id, version_id="latest"):
     """
     
     client = secretmanager.SecretManagerServiceClient()
-    print("CLIENT: ", client)
+    # print("CLIENT: ", client)
     name = client.secret_version_path(project_id, secret_id, version_id)
-    print("NAME: ",name)
+    # print("NAME: ",name)
     response = client.access_secret_version(name)
-    print("RESPONSE: ", response)
+    # print("RESPONSE: ", response)
     payload = response.payload.data.decode('UTF-8')
     return payload

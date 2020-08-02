@@ -12,7 +12,5 @@ services:
             PROJECT_ID: ${PROJECT_ID}
         volumes:
             - ${PWD}:/usr/src/app
-        command: gunicorn --bind :8080 -w 4 -b 0.0.0.0:5000 wsgi:app
-        ports:
-            - "8080:8080"
+        
             

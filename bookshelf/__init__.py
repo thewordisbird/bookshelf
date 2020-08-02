@@ -17,10 +17,7 @@ def create_app(config_name=config_name):
 
     Also where extentions and blueprints are registered with the instance
     """
-    print('Creating Applications')
     app = Flask(__name__)
-    print('config_name: ', config_name)
-    print('ENVARS: ', os.environ.get('PROJECT_ID'),os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
     config_module = f"config.{config_name.capitalize()}Config"
     
     app.config.from_object(config_module)

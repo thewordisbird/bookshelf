@@ -126,10 +126,10 @@ def new_review(book_id):
     rating=int(request.args.get('rating', 0))
     form = ReviewForm(rating=rating)
     book = google_books.get_book(book_id)
-    print(f"VALIDATION: {form.validate()}")
-    print(f"REQUEST DATA: {request.get_data}, {request.form}")
-    print(f"FORM DATA: {form.data}")
-    print(f"ERRORS: {form.errors}")
+    # print(f"VALIDATION: {form.validate()}")
+    # print(f"REQUEST DATA: {request.get_data}, {request.form}")
+    # print(f"FORM DATA: {form.data}")
+    # print(f"ERRORS: {form.errors}")
     if form.validate_on_submit():
         data = {
             'uid': session['_user']['uid'],

@@ -11,7 +11,11 @@ class Config:
     WEB_API_KEY = secrets_wrapper.access_secret_version(PROJECT_ID, 'WEB_API_KEY')
 
 class ProductionConfig(Config):
-    """Production configuration"""
+    """
+    Production configuration
+    
+    Will not work without SSL certificate.
+    """
     SESSION_COOKIE_SECURE = True
     SECURE_FIREBASE = True
 
