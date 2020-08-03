@@ -1,8 +1,6 @@
 # bookshelf
 A web application to rate and review books.
 
-[bookshelf.thewordisbird.dev](https://bookshelf.thewordisbird.dev)
-
 ## Motivation
 A project to learn and implement a python flask application using Google's Firebase cloud services. At this point this includes Firebase Auth and Firestore. Updates will include Firebase Storage to store user profile images, Firebase Hosting to take advantage of serving staic files over a CDN, and Firebase Cloud Functions to manage firestore maintnance.
 
@@ -21,6 +19,9 @@ A project to learn and implement a python flask application using Google's Fireb
     * Docker
 * External Data
     * Google Books REST API
+* Code Styling
+    * flake8 linting
+    * black formatter
 
 ## Setup/Installation
 Before installation the following external services are required: 
